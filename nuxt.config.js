@@ -9,8 +9,8 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - nearbook',
-    title: 'nearbook',
+    titleTemplate: '%s',
+    title: "Near's bookshop",
     htmlAttrs: {
       lang: 'en'
     },
