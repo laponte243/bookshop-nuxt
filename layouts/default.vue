@@ -21,53 +21,53 @@
         Inicia Sesion Con Near
       </v-btn>
       <div
-            v-show="sesion"
-            class="my-2"
-          >
-            <v-menu transition="slide-x-transition">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  color="#6868ac"
-                  class="ma-2 white--text"
-                  v-bind="attrs"
-                  v-on="on"
+        v-show="sesion"
+        class="my-2"
+      >
+        <v-menu transition="slide-x-transition">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              color="#6868ac"
+              class="ma-2 white--text"
+              v-bind="attrs"
+              v-on="on"
+            >
+              {{ accountId }}
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-itemlink>
+              <v-list-item-title>
+                <router-link
+                  class="black--text"
+                  to="pages/user/"
                 >
-                  {{ accountId }}
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-itemlink>
-                  <v-list-item-title>
-                    <router-link
-                      class="black--text"
-                      to="pages/user/"
-                    >
-                      Perfil
-                    </router-link>
-                  </v-list-item-title>
-                  <v-list-item-title>
-                    <router-link
-                      class="black--text"
-                      to="pages/user/"
-                    >
-                      Mis Libros
-                    </router-link>
-                  </v-list-item-title>
-                  <v-list-item-title>
-                    <router-link
-                      class="black--text"
-                      to="pages/product/registration/"
-                    >
-                      Publicar libro
-                    </router-link>
-                  </v-list-item-title>
-                  <v-list-item-title @click="signOut()">
-                    Cerrar Sesion
-                  </v-list-item-title>
-                </v-list-itemlink>
-              </v-list>
-            </v-menu>
-          </div>
+                  Perfil
+                </router-link>
+              </v-list-item-title>
+              <v-list-item-title>
+                <router-link
+                  class="black--text"
+                  to="pages/user/"
+                >
+                  Mis Libros
+                </router-link>
+              </v-list-item-title>
+              <v-list-item-title>
+                <router-link
+                  class="black--text"
+                  to="pages/product/registration/"
+                >
+                  Publicar libro
+                </router-link>
+              </v-list-item-title>
+              <v-list-item-title @click="signOut()">
+                Cerrar Sesion
+              </v-list-item-title>
+            </v-list-itemlink>
+          </v-list>
+        </v-menu>
+      </div>
     </v-app-bar>
     <v-main>
       <Nuxt />

@@ -11,6 +11,19 @@
         <footer>
           <small>
             <em>&mdash;John Johnson</em>
+            <v-file-input
+              v-model="file"
+              show-size
+              label="File input"
+            />
+            <v-btn
+              color="#6868ac"
+              large
+              class="white--text"
+              @click="test()"
+            >
+              test
+            </v-btn>
           </small>
         </footer>
       </blockquote>
@@ -20,6 +33,22 @@
 
 <script>
 export default {
-  name: 'InspirePage'
+  name: 'InspirePage',
+
+  data: () => ({
+    file: null
+  }),
+  // async fetch ({ $axios }) {
+  // this.posts = await ($axios.$post('/api/uploader/test')).data
+  // },
+  methods: {
+    async test ($axios) {
+      const formData = new FormData()
+      formData.append('file', this.file, this.file.name)
+      const { data } = await $axios.$post('/api/uploader/test', formData)
+      console.log(data)
+    }
+  }
+
 }
 </script>
