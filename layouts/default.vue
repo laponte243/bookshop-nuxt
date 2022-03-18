@@ -13,6 +13,7 @@
       </v-btn>
       <v-spacer />
       <v-btn
+        v-show="!sesion"
         color="#6868ac"
         large
         class="white--text"
@@ -92,6 +93,8 @@ export default {
       clipped: false,
       drawer: false,
       fixed: false,
+      sesion: null,
+      accountId: null,
       items: [
         {
           icon: 'mdi-apps',

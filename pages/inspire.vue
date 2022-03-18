@@ -38,9 +38,6 @@ export default {
   data: () => ({
     file: null
   }),
-  // async fetch ({ $axios }) {
-  // this.posts = await ($axios.$post('/api/uploader/test')).data
-  // },
   methods: {
     async test ({ $axios }) {
       const formData = new FormData()
