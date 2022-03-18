@@ -20,7 +20,7 @@
               color="#6868ac"
               large
               class="white--text"
-              @click="test()"
+              @click="test"
             >
               test
             </v-btn>
@@ -42,11 +42,11 @@ export default {
   // this.posts = await ($axios.$post('/api/uploader/test')).data
   // },
   methods: {
-    async test ($axios) {
+    async test ({ $axios }) {
       const formData = new FormData()
-      formData.append('file', this.file, this.file.name)
-      const { data } = await $axios.$post('/api/uploader/test', formData)
-      console.log(data)
+      formData.append('libro', this.file)
+      const { data } = await this.$axios.$post('/api/uploader/test', formData)
+      return data
     }
   }
 
