@@ -7,7 +7,7 @@
           :key="i"
           class="col-xs-12 col-sm-4 col-md-2 li1"
         >
-          <router-link :to="{ name: 'product', params: { idserie: item.token_series_id } }">
+          <NuxtLink :to="`/book/${item.token_series_id}`">
             <v-card class="hover2">
               <v-img
                 :src="item.metadata.media"
@@ -36,7 +36,7 @@
                 </p>
               </div>
             </v-card>
-          </router-link>
+          </NuxtLink>
         </v-col>
       </v-row>
     </v-container>

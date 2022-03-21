@@ -5,10 +5,39 @@
       fixed
       app
     >
-      <v-toolbar-title v-text="title" />
-      <v-btn icon>
+      <NuxtLink to="/">
+        <v-img
+          class="mx-2"
+          :src="require('~/assets/img/logo.png')"
+          max-width="120"
+          contain
+        />
+      </NuxtLink>
+      <v-btn
+        to="/market"
+        class="mx-2"
+        icon
+      >
         <v-icon>
           mdi-shopping-outline
+        </v-icon>
+      </v-btn>
+      <v-btn
+        to="/market"
+        class="mx-2"
+        icon
+      >
+        <v-icon>
+          mdi-book-multiple
+        </v-icon>
+      </v-btn>
+      <v-btn
+        to="/market"
+        class="mx-2"
+        icon
+      >
+        <v-icon>
+          mdi-book-plus
         </v-icon>
       </v-btn>
       <v-spacer />
@@ -26,7 +55,7 @@
         class="my-2"
       >
         <v-menu transition="slide-x-transition">
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn
               color="#6868ac"
               class="ma-2 white--text"
