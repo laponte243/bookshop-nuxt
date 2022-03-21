@@ -23,7 +23,7 @@
         </v-icon>
       </v-btn>
       <v-btn
-        to="/market"
+        to="/library"
         class="mx-2"
         icon
       >
@@ -32,7 +32,7 @@
         </v-icon>
       </v-btn>
       <v-btn
-        to="/market"
+        to="/book/new"
         class="mx-2"
         icon
       >
@@ -78,7 +78,7 @@
               <v-list-item-title>
                 <router-link
                   class="black--text"
-                  to="pages/user/"
+                  to="pages/library/"
                 >
                   Mis Libros
                 </router-link>
@@ -154,7 +154,7 @@ export default {
       // create wallet connection
       const wallet = new WalletConnection(near)
       wallet.requestSignIn(
-        'bookshop.testnet', // contract requesting access
+        'book.bookshop.testnet', // contract requesting access
         'Near-BookShop', // optional
         'http://localhost:3000/', // optional
         'http://localhost:3000/error'

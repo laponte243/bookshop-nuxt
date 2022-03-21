@@ -7,7 +7,7 @@
           :key="i"
           class="col-xs-12 col-sm-4 col-md-2 li1"
         >
-          <NuxtLink :to="`/book/${item.token_series_id}`">
+          <NuxtLink :to="`/products/variants/${item.token_series_id}`">
             <v-card class="hover2">
               <v-img
                 :src="item.metadata.media"

@@ -93,7 +93,6 @@ const { connect, keyStores, WalletConnection, Contract } = nearAPI
 export default {
   data () {
     return {
-      items: ['Administrador', 'Regular', 'Moderador'],
       serieId: this.$route.params.id,
       dataNftToken: null
     }
@@ -103,12 +102,10 @@ export default {
   },
   methods: {
     async nftTokensContract () {
-      const CONTRACT_NAME = 'bookshop.testnet'
-      // connect to NEAR
+      const CONTRACT_NAME = 'book.bookshop.testnet'
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
       )
-      // create wallet connection
       const wallet = new WalletConnection(near)
       const contract = new Contract(wallet.account(), CONTRACT_NAME, {
         viewMethods: ['get_nft_series_single'],
