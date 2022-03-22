@@ -11,7 +11,8 @@
             <v-card class="hover2">
               <v-img
                 :src="item.metadata.media"
-                class="white--text imgOffers"
+                :aspect-ratio="10/16"
+                contain
               />
               <div class="textHover pt-4">
                 <h4>
@@ -37,6 +38,61 @@
               </div>
             </v-card>
           </NuxtLink>
+        </v-col>
+        <v-col
+          v-for="(item, i) in dataNftTokens"
+          :key="i"
+          class="col-xs-12 col-sm-4 col-md-2 li1"
+        >
+          <v-hover v-slot="{ hover }">
+            <v-card
+              class="mx-auto"
+              color="grey lighten-4"
+            >
+              <v-img
+                :aspect-ratio="10/16"
+                :src="item.metadata.media"
+              >
+                <v-expand-transition>
+                  <div
+                    v-if="hover"
+                    class="transition-fast-in-fast-out primary darken-2 v-card--reveal white--text"
+                    style="height: 100%;"
+                  >
+                    <h4>
+                      {{ item.metadata.title }}
+                    </h4>
+                    <h5>
+                      <!--{{ item.metadata.price }}-->
+                      <strong>
+                        {{ item.metadata.price }}
+                      </strong>
+                    </h5>
+                    <h5>
+                      {{ item.metadata.copies }} copias
+                    </h5>
+                    <br>
+                    <h5>
+                      {{ item.creator_id }}
+                    </h5>
+                    <br>
+                    <p>
+                      {{ item.metadata.description }}
+                    </p>
+                    <v-btn
+                      to="/book/1"
+                      class="mx-2 secondary"
+                      icon
+                    >
+                      <v-icon>
+                        mdi-magnify
+                      </v-icon>
+                    </v-btn>
+                  </div>
+                </v-expand-transition>
+              </v-img>
+            </v-card>
+          </v-hover>
         </v-col>
       </v-row>
     </v-container>
@@ -131,8 +187,8 @@ export default {
   -moz-filter: brightness(50%);
   -o-filter: brightness(50%);
   -ms-filter: brightness(50%);
-  height: 300px;
-  width: 180px;
+  height: 476.5px;
+  width: 290px;
 }
 .hover2:hover {
   display: inline-block;

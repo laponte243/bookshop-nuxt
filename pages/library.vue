@@ -513,14 +513,6 @@ export default {
 }
 </script>
 <style>
-  .v-card--reveal {
-    align-items: center;
-    bottom: 0;
-    justify-content: center;
-    opacity: .5;
-    position: absolute;
-    width: 100%;
-  }
   .carousel {
     background-image: url("~assets/img/home/fondoCarousel.png");
     background-size: 101% 100%;
