@@ -7,43 +7,6 @@
           :key="i"
           class="col-xs-12 col-sm-4 col-md-2 li1"
         >
-          <NuxtLink :to="`/products/variants/${item.token_series_id}`">
-            <v-card class="hover2">
-              <v-img
-                :src="item.metadata.media"
-                :aspect-ratio="10/16"
-                contain
-              />
-              <div class="textHover pt-4">
-                <h4>
-                  {{ item.metadata.title }}
-                </h4>
-                <h5>
-                  <!--{{ item.metadata.price }}-->
-                  <strong>
-                    10 NEAR
-                  </strong>
-                </h5>
-                <h5>
-                  {{ item.metadata.copies }} copias
-                </h5>
-                <br>
-                <h5>
-                  {{ item.creator_id }}
-                </h5>
-                <br>
-                <p>
-                  {{ item.metadata.description }}
-                </p>
-              </div>
-            </v-card>
-          </NuxtLink>
-        </v-col>
-        <v-col
-          v-for="(item, i) in dataNftTokens"
-          :key="i"
-          class="col-xs-12 col-sm-4 col-md-2 li1"
-        >
           <v-hover v-slot="{ hover }">
             <v-card
               class="mx-auto"
