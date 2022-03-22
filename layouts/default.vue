@@ -66,35 +66,16 @@
             </v-btn>
           </template>
           <v-list>
-            <v-list-itemlink>
-              <v-list-item-title>
-                <router-link
-                  class="black--text"
-                  to="pages/user/"
-                >
-                  Perfil
-                </router-link>
-              </v-list-item-title>
-              <v-list-item-title>
-                <router-link
-                  class="black--text"
-                  to="pages/library/"
-                >
-                  Mis Libros
-                </router-link>
-              </v-list-item-title>
-              <v-list-item-title>
-                <router-link
-                  class="black--text"
-                  to="pages/product/registration/"
-                >
-                  Publicar libro
-                </router-link>
-              </v-list-item-title>
-              <v-list-item-title @click="signOut()">
-                Cerrar Sesion
-              </v-list-item-title>
-            </v-list-itemlink>
+            <v-list-item
+              to="/user-profile"
+            >
+              <v-list-item-title>Perfil</v-list-item-title>
+            </v-list-item>
+            <v-list-item
+              @click="signOut()"
+            >
+              <v-list-item-title>Cerrar Sesión</v-list-item-title>
+            </v-list-item>
           </v-list>
         </v-menu>
       </div>
