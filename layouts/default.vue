@@ -135,10 +135,7 @@ export default {
       // create wallet connection
       const wallet = new WalletConnection(near)
       wallet.requestSignIn(
-        'book.bookshop.testnet', // contract requesting access
-        'Near-BookShop', // optional
-        'http://localhost:3000/', // optional
-        'http://localhost:3000/error'
+        'book.bookshop.testnet'
       )
     },
     async isSigned () {
