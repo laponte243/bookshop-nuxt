@@ -116,7 +116,12 @@
   </v-container>
 </template>
 <script>
+import * as nearAPI from 'near-api-js'
+import { CONFIG } from '@/services/api'
+const { connect, keyStores, WalletConnection, Contract } = nearAPI
+
 export default {
+  name: 'user-profile',
   data () {
     return {
       e6: 1,
@@ -134,6 +139,28 @@ export default {
         return false
       }
       return url.protocol === 'http:' || url.protocol === 'https:'
+    },
+    async setData () {
+      const CONTRACT_NAME = 'bookshop.testnet'
+      // connect to NEAR
+      const near = await connect(CONFIG(new keyStores.BrowserLocalStorageKeyStore()))
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        changeMethods: ['set_profile'],
+        sender: wallet.account()
+      })
+      if (wallet.isSignedIn()) {
+        await contract.set_profile(
+          {
+            name: this.profile.name,
+            last_name: this.profile.last_name,
+            email: this.profile.email,
+            bio: this.profile.bio,
+            website: this.profile.website
+          }
+        )
+      }
     }
   }
 }

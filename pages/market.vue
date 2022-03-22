@@ -68,7 +68,7 @@ import { CONFIG } from '@/services/api'
 const { connect, keyStores, WalletConnection, Contract } = nearAPI
 
 export default {
-  name: 'DashboardDashboard',
+  name: 'market',
 
   data () {
     return {

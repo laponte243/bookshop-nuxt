@@ -16,7 +16,7 @@
       >
         Estas a pocos pasos de publicar tu libro!
       </v-card-title>
-      <v-card-content>
+      <v-card-text>
         <v-stepper
           v-model="e6"
           vertical
@@ -25,142 +25,10 @@
             :complete="e6 > 1"
             step="1"
           >
-            Primero lo primero, Completa tu perfil!
-          </v-stepper-step>
-
-          <v-stepper-content step="1">
-            <v-container>
-              <v-card
-                outlined
-                elevation="5"
-              >
-                <v-card-text>
-                  <div>Queremos conocerte mejor</div>
-                  <p class="text-h4 text--primary">
-                    Perfil
-                  </p>
-                  <div class="text--primary">
-                    <v-row>
-                      <v-col
-                        cols="12"
-                        sm="12"
-                        md="4"
-                        lg="4"
-                      >
-                        <v-text-field
-                          v-model="name"
-                          :rules="[v => (v || '' ).length <= 30 || '30 caracteres o menos']"
-                          label="Name"
-                          append-icon="mdi-account"
-                          outlined
-                        />
-                      </v-col>
-
-                      <v-col
-                        cols="12"
-                        sm="12"
-                        md="4"
-                        lg="4"
-                      >
-                        <v-text-field
-                          v-model="lastName"
-                          :rules="[v => (v || '' ).length <= 30 || '30 caracteres o menos']"
-                          label="Last Name"
-                          append-icon="mdi-account"
-                          outlined
-                        />
-                      </v-col>
-
-                      <v-col
-                        cols="12"
-                        sm="12"
-                        md="4"
-                        lg="4"
-                      >
-                        <v-text-field
-                          v-model="penName"
-                          :rules="[v => (v || '' ).length <= 40 || '40 caracteres o menos']"
-                          label="Pen Name"
-                          append-icon="mdi-pencil"
-                          outlined
-                        />
-                      </v-col>
-
-                      <v-col
-                        cols="12"
-                        sm="12"
-                        md="4"
-                        lg="4"
-                      >
-                        <v-text-field
-                          v-model="website"
-                          :rules="rules_url"
-                          label="Website"
-                          append-icon="mdi-web"
-                          outlined
-                        />
-                      </v-col>
-
-                      <v-col
-                        cols="12"
-                        sm="12"
-                        md="4"
-                        lg="4"
-                      >
-                        <v-text-field
-                          v-model="twitter"
-                          :rules="[v => (v || '' ).length <= 30 || '30 caracteres o menos']"
-                          outlined
-                          label="twitter username"
-                          append-icon="mdi-twitter"
-                        />
-                      </v-col>
-
-                      <v-col
-                        cols="12"
-                        sm="12"
-                        md="6"
-                        lg="6"
-                      >
-                        <v-textarea
-                          label="Bio"
-                          clearable
-                          counter
-                          outlined
-                          :rules="[v => (v || '' ).length <= 255 || '255 caracteres o menos']"
-                          auto-grow
-                          append-icon="mdi-leaf"
-                        />
-                      </v-col>
-                    </v-row>
-                  </div>
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn
-                    block
-                    color="secondary"
-                  >
-                    guardar
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-container>
-            <v-btn
-              color="primary"
-              @click="e6 = 2"
-            >
-              Continuar
-            </v-btn>
-          </v-stepper-content>
-
-          <v-stepper-step
-            :complete="e6 > 2"
-            step="2"
-          >
             Cuentanos sobre tu libro
           </v-stepper-step>
 
-          <v-stepper-content step="2">
+          <v-stepper-content step="1">
             <v-container>
               <v-card
                 outlined
@@ -178,9 +46,26 @@
                         <v-text-field
                           v-model="title"
                           :rules="[v => (v || '' ).length <= 40 || '40 caracteres o menos']"
-                          label="Title"
+                          label="Título"
                           append-icon="mdi-book"
                           outlined
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="12"
+                        md="6"
+                        lg="6"
+                      >
+                        <v-textarea
+                          v-model="description"
+                          label="Descripción"
+                          clearable
+                          counter
+                          outlined
+                          :rules="[v => (v || '' ).length <= 255 || '255 caracteres o menos']"
+                          auto-grow
+                          append-icon="mdi-text"
                         />
                       </v-col>
                       <v-col
@@ -192,9 +77,9 @@
                         <v-select
                           v-model="e6"
                           :menu-props="{ maxHeight: '400' }"
-                          label="Genres"
+                          label="Generos"
                           multiple
-                          hint="Selecciona una o varias"
+                          hint="Selecciona uno o varios"
                           append-icon="mdi-tag-multiple"
                           outlined
                         />
@@ -205,15 +90,68 @@
                         md="6"
                         lg="6"
                       >
-                        <v-textarea
-                          label="Description"
-                          clearable
-                          counter
+                        <v-text-field
+                          v-model="price"
+                          :rules="[v => (v || '' ).length <= 10 || '10 caracteres o menos', v => (v || '' ) > 0 || 'Debe ser numerico > 0']"
+                          label="Precio"
+                          append-icon="mdi-wallet"
                           outlined
-                          :rules="[v => (v || '' ).length <= 255 || '255 caracteres o menos']"
-                          auto-grow
-                          append-icon="mdi-text"
+                          number
                         />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="12"
+                        md="6"
+                        lg="6"
+                      >
+                        <v-row>
+                          <v-col
+                            cols="12"
+                            sm="12"
+                            md="12"
+                            lg="5"
+                          >
+                            <v-text-field
+                              v-model="title"
+                              :rules="[v => (v || '' ).length <= 40 || '40 caracteres o menos']"
+                              label="Cuenta Near"
+                              append-icon="mdi-book"
+                              outlined
+                            />
+                          </v-col>
+                          <v-col
+                            cols="12"
+                            sm="12"
+                            md="12"
+                            lg="5"
+                          >
+                            <v-text-field
+                              v-model="title"
+                              :rules="[v => (v || '' ).length <= 2 || '2 caracteres o menos', v => (v || '' ) > 0 || 'Debe ser numerico > 0']"
+                              label="Porcentaje"
+                              append-icon="mdi-book"
+                              outlined
+                            />
+                          </v-col>
+                          <v-col
+                            cols="12"
+                            sm="12"
+                            md="12"
+                            lg="2"
+                          >
+                            <v-btn
+                            light
+                            color="indigo"
+                            icon
+                            fab
+                            >
+                            <v-icon>
+                              mdi-plus
+                            </v-icon>
+                            </v-btn>
+                          </v-col>
+                        </v-row>
                       </v-col>
                     </v-row>
                   </div>
@@ -222,20 +160,20 @@
             </v-container>
             <v-btn
               color="primary"
-              @click="e6 = 3"
+              @click="e6 = 2"
             >
-              Continue
+              Continuar
             </v-btn>
           </v-stepper-content>
 
           <v-stepper-step
             :complete="e6 > 3"
-            step="3"
+            step="2"
           >
             Hora de subir tu libro!
           </v-stepper-step>
 
-          <v-stepper-content step="3">
+          <v-stepper-content step="2">
             <v-container>
               <v-card
                 outlined
@@ -251,8 +189,10 @@
                         lg="6"
                       >
                         <v-file-input
-                          v-model="image"
+                          v-model="cover"
                           outlined
+                          label="Portada"
+                          accept="image/*"
                           @change="Preview_image"
                         />
                         <v-img :src="url" />
@@ -265,7 +205,10 @@
                         lg="6"
                       >
                         <v-file-input
-                          v-model="document"
+                          v-model="book"
+                          label="Archivo del libro"
+                          hint="Formato epub, pdf o mobi"
+                          accept=".pdf, .epub, .mobi"
                           outlined
                         />
                       </v-col>
@@ -276,19 +219,16 @@
             </v-container>
             <v-btn
               color="primary"
-              @click="e6 = 4"
+              @click="e6 = 3"
             >
-              Continue
-            </v-btn>
-            <v-btn text>
-              Cancel
+              Continuar
             </v-btn>
           </v-stepper-content>
 
-          <v-stepper-step step="4">
+          <v-stepper-step step="3">
             Términos y Condiciones
           </v-stepper-step>
-          <v-stepper-content step="4">
+          <v-stepper-content step="3">
             <v-card
               color="grey lighten-1"
               class="mb-12"
@@ -298,30 +238,72 @@
               color="primary"
               @click="e6 = 1"
             >
-              Continue
-            </v-btn>
-            <v-btn text>
-              Cancel
+              Aceptar y culminar
             </v-btn>
           </v-stepper-content>
         </v-stepper>
-      </v-card-content>
+      </v-card-text>
     </v-card>
   </v-container>
 </template>
 <script>
+import * as nearAPI from 'near-api-js'
+import { CONFIG } from '@/services/api'
+const { connect, keyStores, WalletConnection, Contract } = nearAPI
+
 export default {
   data () {
     return {
       e6: 1,
-      url: null,
-      image: null,
-      document: null
+      cover: null,
+      book: null,
+      title: null,
+      description: null,
+      genres: [],
+      rules_url: [
+        value => this.isURL(value) || 'URL is not valid'
+      ]
     }
   },
   methods: {
     Preview_image () {
-      this.url = URL.createObjectURL(this.image)
+      this.url = URL.createObjectURL(this.cover)
+    },
+    async ipfs_send () {
+      const formData = new FormData()
+      formData.append('book', this.cover)
+      formData.append('cover', this.book)
+      const { data } = await this.$axios.$post('/api/uploader/web3storage', formData)
+      return data
+    },
+    isURL (str) {
+      let url
+      try {
+        url = new URL(str)
+      } catch (_) {
+        return false
+      }
+      return url.protocol === 'http:' || url.protocol === 'https:'
+    },
+    async setData () {
+      const CONTRACT_NAME = 'book.bookshop.testnet'
+      // connect to NEAR
+      const near = await connect(CONFIG(new keyStores.BrowserLocalStorageKeyStore()))
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        changeMethods: ['nft_series'],
+        sender: wallet.account()
+      })
+      if (wallet.isSignedIn()) {
+        await contract.nft_series(
+          {
+            token_metadata: this.profile.website,
+            category: this.profile.bio,
+            price: this.profile.bio
+          }
+        )
+      }
     }
   }
 }
