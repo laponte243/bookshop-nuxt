@@ -32,7 +32,7 @@
               lg="4"
             >
               <v-text-field
-                v-model="profile.lastName"
+                v-model="profile.last_name"
                 :rules="[v => (v || '' ).length <= 30 || '30 caracteres o menos']"
                 label="Last Name"
                 append-icon="mdi-account"
@@ -47,7 +47,7 @@
               lg="4"
             >
               <v-text-field
-                v-model="profile.penName"
+                v-model="profile.pen_name"
                 :rules="[v => (v || '' ).length <= 40 || '40 caracteres o menos']"
                 label="Pen Name"
                 append-icon="mdi-pencil"
@@ -169,9 +169,11 @@ export default {
         await contract.set_profile({
           name: this.profile.name,
           last_name: this.profile.last_name,
+          pen_name: this.profile.pen_name,
           email: this.profile.email,
           bio: this.profile.bio,
-          website: this.profile.website
+          website: this.profile.website,
+          twitter: this.profile.twitter
         })
       }
     },
@@ -189,6 +191,7 @@ export default {
         await contract.put_profile({
           name: this.profile.name,
           last_name: this.profile.last_name,
+          pen_name: this.profile.pen_name,
           email: this.profile.email,
           bio: this.profile.bio,
           website: this.profile.website
