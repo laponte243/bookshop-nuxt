@@ -11,11 +11,10 @@ router.post('/uploader/web3storage', multer().fields([{name: 'book', maxCount: 1
   }
   const client = new Web3Storage({ token })
   const files = [
-    new File([req.files.book.buffer], 'book' ),
-    new File([req.files.cover.buffer], 'cover' )
+    new File([req.files.book.buffer], req.files.book.originalname ),
+    new File([req.files.cover.buffer], req.files.cover.originalname)
   ]
   const cid = await client.put(files)
   return res.json({ data: cid })
 })
-
 module.exports = router
