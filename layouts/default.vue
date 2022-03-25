@@ -59,9 +59,9 @@
             </v-btn>
             <div
               v-show="sesion"
-              class="my-2"
+              class="text-center"
             >
-              <v-menu transition="slide-x-transition">
+              <v-menu offset-y transition="slide-x-transition">
                 <template #activator="{ on, attrs }">
                   <v-btn
                     color="#6868ac"
@@ -73,14 +73,10 @@
                   </v-btn>
                 </template>
                 <v-list>
-                  <v-list-item
-                    to="/user-profile"
-                  >
+                  <v-list-item to="/user-profile">
                     <v-list-item-title>Perfil</v-list-item-title>
                   </v-list-item>
-                  <v-list-item
-                    @click="signOut()"
-                  >
+                  <v-list-item @click="signOut()">
                     <v-list-item-title>Cerrar Sesión</v-list-item-title>
                   </v-list-item>
                 </v-list>
