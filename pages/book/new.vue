@@ -75,7 +75,8 @@
                         lg="6"
                       >
                         <v-select
-                          v-model="e6"
+                          v-model="genres"
+                          items="categorias"
                           :menu-props="{ maxHeight: '400' }"
                           label="Generos"
                           multiple
@@ -141,14 +142,14 @@
                             lg="2"
                           >
                             <v-btn
-                            light
-                            color="indigo"
-                            icon
-                            fab
+                              light
+                              color="indigo"
+                              icon
+                              fab
                             >
-                            <v-icon>
-                              mdi-plus
-                            </v-icon>
+                              <v-icon>
+                                mdi-plus
+                              </v-icon>
                             </v-btn>
                           </v-col>
                         </v-row>
@@ -260,10 +261,14 @@ export default {
       title: null,
       description: null,
       genres: [],
+      categorias: [],
       rules_url: [
         value => this.isURL(value) || 'URL is not valid'
       ]
     }
+  },
+  mounted () {
+    this.getCategorias()
   },
   methods: {
     Preview_image () {
@@ -284,6 +289,27 @@ export default {
         return false
       }
       return url.protocol === 'http:' || url.protocol === 'https:'
+    },
+    async getCategorias () {
+      console.log('hola')
+      this.categorias = []
+      const CONTRACT_NAME = 'book.bookshop.testnet'
+      // connect to NEAR
+      const near = await connect(
+        CONFIG(new keyStores.BrowserLocalStorageKeyStore())
+      )
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_category'],
+        sender: wallet.account()
+      })
+      if (wallet.isSignedIn()) {
+        await contract.get_category().then((response) => {
+          console.log(response)
+          this.categorias = response
+        })
+      }
     },
     async setData () {
       const CONTRACT_NAME = 'book.bookshop.testnet'
