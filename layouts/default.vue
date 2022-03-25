@@ -5,80 +5,90 @@
       fixed
       app
     >
-      <NuxtLink to="/">
-        <v-img
-          class="mx-2"
-          :src="require('~/assets/img/logo.png')"
-          max-width="120"
-          contain
-        />
-      </NuxtLink>
-      <v-btn
-        to="/market"
-        class="mx-2"
-        icon
-      >
-        <v-icon>
-          mdi-shopping-outline
-        </v-icon>
-      </v-btn>
-      <v-btn
-        to="/library"
-        class="mx-2"
-        icon
-      >
-        <v-icon>
-          mdi-book-multiple
-        </v-icon>
-      </v-btn>
-      <v-btn
-        to="/book/new"
-        class="mx-2"
-        icon
-      >
-        <v-icon>
-          mdi-book-plus
-        </v-icon>
-      </v-btn>
-      <v-spacer />
-      <v-btn
-        v-show="!sesion"
-        color="#6868ac"
-        large
-        class="white--text"
-        @click="signIn()"
-      >
-        Inicia Sesion Con Near
-      </v-btn>
-      <div
-        v-show="sesion"
-        class="my-2"
-      >
-        <v-menu transition="slide-x-transition">
-          <template #activator="{ on, attrs }">
+      <v-container>
+        <v-row align="center">
+          <v-col>
+            <NuxtLink to="/">
+              <v-img
+                class="mx-2"
+                :src="require('~/assets/img/logo.png')"
+                max-width="120"
+                contain
+              />
+            </NuxtLink>
+          </v-col>
+          <v-col>
             <v-btn
-              color="#6868ac"
-              class="ma-2 white--text"
-              v-bind="attrs"
-              v-on="on"
+              to="/market"
+              class="mx-2"
+              icon
             >
-              {{ accountId }}
+              <v-icon>
+                mdi-shopping-outline
+              </v-icon>
             </v-btn>
-          </template>
-          <v-list>
-            <v-list-item
-              to="/user-profile"
+            <v-btn
+              to="/library"
+              class="mx-2"
+              icon
             >
-              <v-list-item-title>Perfil</v-list-item-title>
-            </v-list-item>
-            <v-list-item
-              @click="signOut()"
+              <v-icon>
+                mdi-book-multiple
+              </v-icon>
+            </v-btn>
+            <v-btn
+              to="/book/new"
+              class="mx-2"
+              icon
             >
-              <v-list-item-title>Cerrar Sesión</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
+              <v-icon>
+                mdi-book-plus
+              </v-icon>
+            </v-btn>
+          </v-col>
+          <v-spacer />
+          <v-col>
+            <v-btn
+              v-show="!sesion"
+              color="#6868ac"
+              large
+              class="white--text"
+              @click="signIn()"
+            >
+              Inicia Sesion Con Near
+            </v-btn>
+            <div
+              v-show="sesion"
+              class="my-2"
+            >
+              <v-menu transition="slide-x-transition">
+                <template #activator="{ on, attrs }">
+                  <v-btn
+                    color="#6868ac"
+                    class="ma-2 white--text"
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    {{ accountId }}
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item
+                    to="/user-profile"
+                  >
+                    <v-list-item-title>Perfil</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item
+                    @click="signOut()"
+                  >
+                    <v-list-item-title>Cerrar Sesión</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-app-bar>
     <v-main>
       <Nuxt />

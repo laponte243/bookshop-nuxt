@@ -17,7 +17,7 @@
               lg="4"
             >
               <v-text-field
-                v-model="name"
+                v-model="profile.name"
                 :rules="[v => (v || '' ).length <= 30 || '30 caracteres o menos']"
                 label="Name"
                 append-icon="mdi-account"
@@ -32,7 +32,7 @@
               lg="4"
             >
               <v-text-field
-                v-model="lastName"
+                v-model="profile.lastName"
                 :rules="[v => (v || '' ).length <= 30 || '30 caracteres o menos']"
                 label="Last Name"
                 append-icon="mdi-account"
@@ -47,7 +47,7 @@
               lg="4"
             >
               <v-text-field
-                v-model="penName"
+                v-model="profile.penName"
                 :rules="[v => (v || '' ).length <= 40 || '40 caracteres o menos']"
                 label="Pen Name"
                 append-icon="mdi-pencil"
@@ -62,7 +62,7 @@
               lg="4"
             >
               <v-text-field
-                v-model="website"
+                v-model="profile.website"
                 :rules="rules_url"
                 label="Website"
                 append-icon="mdi-web"
@@ -77,10 +77,10 @@
               lg="4"
             >
               <v-text-field
-                v-model="twitter"
+                v-model="profile.twitter"
                 :rules="[v => (v || '' ).length <= 30 || '30 caracteres o menos']"
                 outlined
-                label="twitter username"
+                label="twitter"
                 append-icon="mdi-twitter"
               />
             </v-col>
@@ -92,6 +92,7 @@
               lg="6"
             >
               <v-textarea
+                v-model="profile.bio"
                 label="Bio"
                 clearable
                 counter
@@ -106,8 +107,18 @@
       </v-card-text>
       <v-card-actions>
         <v-btn
+          v-if="profile.name !== undefined"
           block
           color="secondary"
+          @click="setDataEdit()"
+        >
+          guardar
+        </v-btn>
+        <v-btn
+          v-else
+          block
+          color="secondary"
+          @click="setData()"
         >
           guardar
         </v-btn>
@@ -121,14 +132,18 @@ import { CONFIG } from '@/services/api'
 const { connect, keyStores, WalletConnection, Contract } = nearAPI
 
 export default {
-  name: 'user-profile',
+  name: 'UserProfile',
   data () {
     return {
       e6: 1,
       rules_url: [
         value => this.isURL(value) || 'URL is not valid'
-      ]
+      ],
+      profile: []
     }
+  },
+  mounted () {
+    this.getData()
   },
   methods: {
     isURL (str) {
@@ -141,7 +156,7 @@ export default {
       return url.protocol === 'http:' || url.protocol === 'https:'
     },
     async setData () {
-      const CONTRACT_NAME = 'bookshop.testnet'
+      const CONTRACT_NAME = 'book.bookshop.testnet'
       // connect to NEAR
       const near = await connect(CONFIG(new keyStores.BrowserLocalStorageKeyStore()))
       // create wallet connection
@@ -151,15 +166,52 @@ export default {
         sender: wallet.account()
       })
       if (wallet.isSignedIn()) {
-        await contract.set_profile(
-          {
-            name: this.profile.name,
-            last_name: this.profile.last_name,
-            email: this.profile.email,
-            bio: this.profile.bio,
-            website: this.profile.website
-          }
-        )
+        await contract.set_profile({
+          name: this.profile.name,
+          last_name: this.profile.last_name,
+          email: this.profile.email,
+          bio: this.profile.bio,
+          website: this.profile.website
+        })
+      }
+    },
+    async setDataEdit () {
+      const CONTRACT_NAME = 'book.bookshop.testnet'
+      // connect to NEAR
+      const near = await connect(CONFIG(new keyStores.BrowserLocalStorageKeyStore()))
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        changeMethods: ['put_profile'],
+        sender: wallet.account()
+      })
+      if (wallet.isSignedIn()) {
+        await contract.put_profile({
+          name: this.profile.name,
+          last_name: this.profile.last_name,
+          email: this.profile.email,
+          bio: this.profile.bio,
+          website: this.profile.website
+        })
+      }
+    },
+    async getData () {
+      const CONTRACT_NAME = 'book.bookshop.testnet'
+      // connect to NEAR
+      const near = await connect(CONFIG(new keyStores.BrowserLocalStorageKeyStore()))
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_profile'],
+        sender: wallet.account()
+      })
+      if (wallet.isSignedIn()) {
+        // console.log(wallet.account())
+        const response = await contract.get_profile({
+          user_id: wallet.getAccountId()
+        })
+        this.profile = response
+        // console.log(response)
       }
     }
   }

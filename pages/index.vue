@@ -7,19 +7,20 @@
         delimiter-icon="mdi-minus"
         height="90vh"
       >
+        <v-row
+          class="mt-7"
+          align="center"
+          justify="center"
+        >
+          <h1 class="black--text pt">
+            Libros en tendencia
+          </h1>
+        </v-row>
         <v-carousel-item
           v-for="(itemC,i) in itemsCarousel"
           :key="i"
+          class="mt-7"
         >
-          <v-row
-            class="pt-12 mt-12"
-            align="center"
-            justify="center"
-          >
-            <h1 class="black--text pt">
-              Libros en tendencia
-            </h1>
-          </v-row>
           <v-row
             align="center"
             justify="center"
