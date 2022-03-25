@@ -7,7 +7,7 @@
     >
       <v-container>
         <v-row align="center">
-          <v-col>
+          <v-col cols="2">
             <NuxtLink to="/">
               <v-img
                 class="mx-2"
