@@ -7,14 +7,27 @@ const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGUy
 
 router.post('/uploader/web3storage', multer().fields([{name: 'book', maxCount: 1},{name: 'cover', maxCount: 1}]),async function (req, res) {
   const options = {
+    cwd: './static2'
+  }
+  const client = new Web3Storage({ token })
+  const files = [
+    new File([req.files.book.buffer], 'book.'+ req.files.book[0].originalname.split('.').pop() ),
+    new File([req.files.cover.buffer], 'cover.'+ req.files.cover[0].originalname.split('.').pop())
+  ]
+  const cid = await client.put(files)
+  console.log('cid', cid,'nombre_libro', 'book.'+ req.files.book[0].originalname.split('.').pop())
+  return res.json({ data: cid, nombre_libro: 'book.'+ req.files.book[0].originalname.split('.').pop(), nombre_cover: 'cover.'+ req.files.cover[0].originalname.split('.').pop() })
+})
+
+router.post('/uploader/categoria', multer().single('imagen'),async function (req, res) {
+  const options = {
     cwd: './static'
   }
   const client = new Web3Storage({ token })
   const files = [
-    new File([req.files.book.buffer], req.files.book.originalname ),
-    new File([req.files.cover.buffer], req.files.cover.originalname)
+    new File([req.file.buffer], req.file.originalname )
   ]
   const cid = await client.put(files)
-  return res.json({ data: cid })
+  return res.json({ data: cid, nombre: req.file.originalname })
 })
 module.exports = router

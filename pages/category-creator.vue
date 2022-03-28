@@ -29,9 +29,14 @@
               @change="Preview_image"
             />
             <v-img
-              v-if="url"
+              v-if="url && !item.id"
               width="120px"
               :src="url"
+            />
+            <v-img
+              v-if="url && item.id"
+              width="120px"
+              :src="item.imagen"
             />
           </v-col>
           <v-col
@@ -40,10 +45,27 @@
             md="2"
           >
             <v-btn
+              v-if="!item.id"
               color="success"
               @click="add_item"
             >
               Agregar
+            </v-btn>
+
+            <v-btn
+              v-else
+              color="warning"
+              @click="add_item"
+            >
+              Editar
+            </v-btn>
+            <v-btn
+              icon
+              @click="clear_item"
+            >
+            <v-icon>
+              mdi-delete
+              </v-icon>
             </v-btn>
           </v-col>
         </v-row>
@@ -58,11 +80,6 @@
               :headers="header_table"
               :items="data_table"
             >
-              <template #[`item.imagen`]="{ item }">
-                <v-container>
-                  <v-img width="200px" :src="Preview_image2(item)" />
-                </v-container>
-              </template>
               <template #[`item.acciones`]="{ item }">
                 <v-icon
                   color="yellow"
@@ -112,16 +129,15 @@ export default {
         }
       ],
       data_table: [],
-      datax: [],
       url: null
     }
+  },
+  mounted () {
+    this.fetch_data()
   },
   methods: {
     Preview_image () {
       this.url = URL.createObjectURL(this.item.imagen)
-    },
-    Preview_image2 (item) {
-      return URL.createObjectURL(item.imagen)
     },
     add_item () {
       if (this.item.id) {
@@ -130,18 +146,20 @@ export default {
         this.create_item(this.item)
         this.data_table.push(this.item)
       }
+    },
+    edit_item (item) {
+      this.item = item
+    },
+    clear_item () {
       this.item = {
         id: null,
         nombre: null,
         imagen: null
       }
-      this.url = null
-    },
-    edit_item (item) {
-      this.item = item
     },
     async fetch_data () {
-      const CONTRACT_NAME = 'bookshop.testnet'
+      this.data_table = []
+      const CONTRACT_NAME = 'book.bookshop.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
@@ -152,13 +170,15 @@ export default {
         viewMethods: ['get_category'],
         sender: wallet.account()
       })
-      await contract.get_nft_series().then((response) => {
-        this.datax = response
-        console.log(this.datax)
+      await contract.get_category().then((response) => {
+        response.forEach((element) => {
+          this.data_table.push({ id: element.id, nombre: element.name, imagen: element.img })
+        })
       })
     },
-    async create_item(item) {
-      const CONTRACT_NAME = 'bookshop.testnet'
+    async create_item (item) {
+      const CONTRACT_NAME = 'book.bookshop.testnet'
+      const direccionIpfs = '.ipfs.dweb.link'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
@@ -169,10 +189,41 @@ export default {
         changeMethods: ['set_category'],
         sender: wallet.account()
       })
-      await contract.set_profile(item.nombre, item.imagen).then((response) => {
-        console.log(response)
+      const formData = new FormData()
+      formData.append('imagen', this.item.imagen)
+      await this.$axios.$post('/api/uploader/categoria', formData).then((data) => {
+        contract.set_category({
+          name: this.item.nombre,
+          img: data.data + direccionIpfs + '/' + data.nombre
+        }).then((response) => {
+          this.fetch_data()
+        })
       })
     },
+    async update_item (item) {
+      const CONTRACT_NAME = 'book.bookshop.testnet'
+      const direccionIpfs = '.ipfs.dweb.link'
+      // connect to NEAR
+      const near = await connect(
+        CONFIG(new keyStores.BrowserLocalStorageKeyStore())
+      )
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        changeMethods: ['put_category'],
+        sender: wallet.account()
+      })
+      const formData = new FormData()
+      formData.append('imagen', this.item.imagen)
+      await this.$axios.$post('/api/uploader/categoria', formData).then((data) => {
+        contract.put_category({
+          category_id: this.item.id,
+          name: this.item.nombre,
+          img: data.data + direccionIpfs + '/' + data.nombre
+        }).then((response) => {
+          this.fetch_data()
+        })
+      })
     }
   }
 }

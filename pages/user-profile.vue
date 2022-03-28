@@ -107,7 +107,7 @@
       </v-card-text>
       <v-card-actions>
         <v-btn
-          v-if="profile.name !== undefined"
+          v-if="nuevo"
           block
           color="secondary"
           @click="setDataEdit()"
@@ -136,6 +136,7 @@ export default {
   data () {
     return {
       e6: 1,
+      nuevo: false,
       rules_url: [
         value => this.isURL(value) || 'URL is not valid'
       ],
@@ -210,10 +211,12 @@ export default {
       })
       if (wallet.isSignedIn()) {
         // console.log(wallet.account())
-        const response = await contract.get_profile({
+        await contract.get_profile({
           user_id: wallet.getAccountId()
+        }).then((res) => {
+          this.profile = res
+          this.nuevo = true
         })
-        this.profile = response
         // console.log(response)
       }
     }

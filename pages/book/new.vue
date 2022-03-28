@@ -76,7 +76,9 @@
                       >
                         <v-select
                           v-model="genres"
-                          items="categorias"
+                          :items="categorias"
+                          item-value="id"
+                          item-text="name"
                           :menu-props="{ maxHeight: '400' }"
                           label="Generos"
                           multiple
@@ -93,8 +95,23 @@
                       >
                         <v-text-field
                           v-model="price"
-                          :rules="[v => (v || '' ).length <= 10 || '10 caracteres o menos', v => (v || '' ) > 0 || 'Debe ser numerico > 0']"
+                          :rules="priceRule"
                           label="Precio"
+                          append-icon="mdi-wallet"
+                          outlined
+                          number
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="12"
+                        md="6"
+                        lg="6"
+                      >
+                        <v-text-field
+                          v-model="copy"
+                          :rules="copyRule"
+                          label="Copias"
                           append-icon="mdi-wallet"
                           outlined
                           number
@@ -114,10 +131,10 @@
                             lg="5"
                           >
                             <v-text-field
-                              v-model="title"
+                              v-model="subitem.wallet"
                               :rules="[v => (v || '' ).length <= 40 || '40 caracteres o menos']"
-                              label="Cuenta Near"
-                              append-icon="mdi-book"
+                              label="Wallet Near"
+                              append-icon="mdi-account"
                               outlined
                             />
                           </v-col>
@@ -128,10 +145,10 @@
                             lg="5"
                           >
                             <v-text-field
-                              v-model="title"
-                              :rules="[v => (v || '' ).length <= 2 || '2 caracteres o menos', v => (v || '' ) > 0 || 'Debe ser numerico > 0']"
+                              v-model="subitem.percent"
+                              :rules="percentRule"
                               label="Porcentaje"
-                              append-icon="mdi-book"
+                              append-icon="mdi-percent"
                               outlined
                             />
                           </v-col>
@@ -194,9 +211,7 @@
                           outlined
                           label="Portada"
                           accept="image/*"
-                          @change="Preview_image"
                         />
-                        <v-img :src="url" />
                       </v-col>
 
                       <v-col
@@ -237,7 +252,7 @@
             ></v-card>
             <v-btn
               color="primary"
-              @click="e6 = 1"
+              @click="create_item"
             >
               Aceptar y culminar
             </v-btn>
@@ -260,10 +275,26 @@ export default {
       book: null,
       title: null,
       description: null,
+      copy: null,
+      price: null,
+      url: null,
       genres: [],
       categorias: [],
+      subitem: {
+        wallet: null,
+        percent: null
+      },
       rules_url: [
         value => this.isURL(value) || 'URL is not valid'
+      ],
+      priceRule: [
+        value => (!isNaN(parseFloat(value)) && value >= 0 && value <= 999999999) || 'precio no valido'
+      ],
+      copyRule: [
+        value => (Number.isInteger(Number(value)) && value >= 0 && value <= 100) || 'Maximo de 100 copias'
+      ],
+      percentRule: [
+        value => (!isNaN(parseFloat(value)) && value >= 0 && value <= 99) || 'porcentaje no valido'
       ]
     }
   },
@@ -276,8 +307,8 @@ export default {
     },
     async ipfs_send () {
       const formData = new FormData()
-      formData.append('book', this.cover)
-      formData.append('cover', this.book)
+      formData.append('cover', this.cover)
+      formData.append('book', this.book)
       const { data } = await this.$axios.$post('/api/uploader/web3storage', formData)
       return data
     },
@@ -291,7 +322,6 @@ export default {
       return url.protocol === 'http:' || url.protocol === 'https:'
     },
     async getCategorias () {
-      console.log('hola')
       this.categorias = []
       const CONTRACT_NAME = 'book.bookshop.testnet'
       // connect to NEAR
@@ -306,30 +336,50 @@ export default {
       })
       if (wallet.isSignedIn()) {
         await contract.get_category().then((response) => {
-          console.log(response)
           this.categorias = response
         })
       }
     },
-    async setData () {
+    async create_item () {
       const CONTRACT_NAME = 'book.bookshop.testnet'
+      // const direccionIpfs = '.ipfs.dweb.link'
       // connect to NEAR
-      const near = await connect(CONFIG(new keyStores.BrowserLocalStorageKeyStore()))
+      const near = await connect(
+        CONFIG(new keyStores.BrowserLocalStorageKeyStore())
+      )
       // create wallet connection
       const wallet = new WalletConnection(near)
       const contract = new Contract(wallet.account(), CONTRACT_NAME, {
-        changeMethods: ['nft_series'],
+        changeMethods: ['nft_create_series'],
         sender: wallet.account()
       })
-      if (wallet.isSignedIn()) {
-        await contract.nft_series(
+      const formData = new FormData()
+      formData.append('cover', this.cover)
+      formData.append('book', this.book)
+      await this.$axios.$post('/api/uploader/web3storage', formData).then((data) => {
+        contract.nft_create_series(
           {
-            token_metadata: this.profile.website,
-            category: this.profile.bio,
-            price: this.profile.bio
-          }
-        )
-      }
+            token_metadata: {
+              title: 'Naruto Shippuden ch.2: Menolong sasuke',
+              description: 'naruto sasuke',
+              media: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Olympus_Mons_alt.jpg/1024px-Olympus_Mons_alt.jpg',
+              reference: 'ba',
+              copies: 100
+              // media: data.data + direccionIpfs + '/' + data.nombre_libro
+            },
+            category: [1, 2],
+            price: '1000000000000000000000000',
+            royalty: {
+              'hpalencia.test.testnet': 1000
+            }
+          },
+          15200000000000000000000
+        ).then((response) => {
+          console.log(response)
+        }).catch((error) => {
+          console.log(error)
+        })
+      })
     }
   }
 }
