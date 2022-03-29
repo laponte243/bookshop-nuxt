@@ -114,7 +114,7 @@ export default {
       this.$router.push({ name: 'product' })
     },
     async nftTokensContract () {
-      const CONTRACT_NAME = 'bookshop.testnet'
+      const CONTRACT_NAME = 'book.bookshop.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())

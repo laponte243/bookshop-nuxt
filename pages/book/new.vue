@@ -342,7 +342,7 @@ export default {
     },
     async create_item () {
       const CONTRACT_NAME = 'book.bookshop.testnet'
-      // const direccionIpfs = '.ipfs.dweb.link'
+      const direccionIpfs = '.ipfs.dweb.link'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
@@ -350,22 +350,24 @@ export default {
       // create wallet connection
       const wallet = new WalletConnection(near)
       const contract = new Contract(wallet.account(), CONTRACT_NAME, {
-        changeMethods: ['nft_create_series'],
+        changeMethods: ['nft_series'],
         sender: wallet.account()
       })
       const formData = new FormData()
       formData.append('cover', this.cover)
       formData.append('book', this.book)
       await this.$axios.$post('/api/uploader/web3storage', formData).then((data) => {
-        contract.nft_create_series(
+        contract.nft_series(
           {
             token_metadata: {
-              title: 'Naruto Shippuden ch.2: Menolong sasuke',
-              description: 'naruto sasuke',
-              media: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Olympus_Mons_alt.jpg/1024px-Olympus_Mons_alt.jpg',
-              reference: 'ba',
-              copies: 100
-              // media: data.data + direccionIpfs + '/' + data.nombre_libro
+              title: this.title,
+              description: this.description,
+              media: data.data + direccionIpfs + '/' + data.nombre_libro,
+              reference: data.data,
+              copies: this.copies,
+              extra: {
+                cover: data.data + direccionIpfs + '/' + data.nombre_cover
+              }
             },
             category: [1, 2],
             price: '1000000000000000000000000',
@@ -373,7 +375,8 @@ export default {
               'hpalencia.test.testnet': 1000
             }
           },
-          15200000000000000000000
+          '300000000000000',
+          '15200000000000000000000'
         ).then((response) => {
           console.log(response)
         }).catch((error) => {
