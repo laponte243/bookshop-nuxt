@@ -14,7 +14,7 @@
             >
               <v-img
                 :aspect-ratio="10/16"
-                :src="item.metadata.media"
+                :src="item.metadata.extra"
               >
                 <v-expand-transition>
                   <div
@@ -130,6 +130,7 @@ export default {
           from_index: '0',
           limit: 10
         }).then((response) => {
+          console.log(response)
           this.dataNftTokens = response
         })
       }
