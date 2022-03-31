@@ -11,8 +11,8 @@ router.post('/uploader/web3storage', multer().fields([{name: 'book', maxCount: 1
   }
   const client = new Web3Storage({ token })
   const files = [
-    new File([req.files.book.buffer], 'book.'+ req.files.book[0].originalname.split('.').pop() ),
-    new File([req.files.cover.buffer], 'cover.'+ req.files.cover[0].originalname.split('.').pop())
+    new File([req.files.book[0].buffer], 'book.'+ req.files.book[0].originalname.split('.').pop() ),
+    new File([req.files.cover[0].buffer], 'cover.'+ req.files.cover[0].originalname.split('.').pop())
   ]
   const cid = await client.put(files)
   console.log('cid', cid,'nombre_libro', 'book.'+ req.files.book[0].originalname.split('.').pop())

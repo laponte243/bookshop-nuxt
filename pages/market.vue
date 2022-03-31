@@ -14,7 +14,7 @@
             >
               <v-img
                 :aspect-ratio="10/16"
-                :src="item.metadata.media"
+                :src="item.metadata.extra"
               >
                 <v-expand-transition>
                   <div
@@ -128,7 +128,7 @@ export default {
       if (wallet.isSignedIn()) {
         await contract.get_nft_series({
           from_index: '0',
-          limit: 10
+          limit: 20
         }).then((response) => {
           this.dataNftTokens = response
         })
