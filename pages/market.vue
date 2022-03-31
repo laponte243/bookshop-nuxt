@@ -130,6 +130,7 @@ export default {
           from_index: '0',
           limit: 20
         }).then((response) => {
+          console.log(response)
           this.dataNftTokens = response
         })
       }
