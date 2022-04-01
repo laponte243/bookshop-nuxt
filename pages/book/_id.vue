@@ -6,7 +6,7 @@
       >
         <v-col class="col-md-5 col-sm-5 col-xs-12 text-center">
           <v-img
-            :src="dataNftToken.metadata.media"
+            :src="dataNftToken.metadata.extra"
             width="350"
             height="500"
             style="box-shadow: 30px 20px 5px #6868ac"
@@ -19,8 +19,7 @@
             </p>
             <v-card-actions class="pa-0">
               <p class="text-h5 font-weight-light pt-3">
-                10 NEAR
-                <del class="text-subtitle-1 font-weight-thin"> 15 NEAR </del>
+                {{ dataNftToken.price }}
               </p>
               <v-spacer />
               <v-rating
@@ -50,7 +49,6 @@
         <div class="col-sm-12 col-xs-12 col-md-12">
           <v-tabs>
             <v-tab>Description</v-tab>
-            <v-tab>Materials</v-tab>
             <v-tab>REVIEWS</v-tab>
             <v-tab-item>
               <p class="pt-10 text-subtitle-1 font-weight-thin">
@@ -102,7 +100,7 @@ export default {
   },
   methods: {
     async nftTokensContract () {
-      const CONTRACT_NAME = 'book.bookshop.testnet'
+      const CONTRACT_NAME = 'book2.bookshop.testnet'
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
       )

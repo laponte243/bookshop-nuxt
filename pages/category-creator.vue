@@ -159,7 +159,7 @@ export default {
     },
     async fetch_data () {
       this.data_table = []
-      const CONTRACT_NAME = 'book.bookshop.testnet'
+      const CONTRACT_NAME = 'book2.bookshop.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
@@ -177,7 +177,7 @@ export default {
       })
     },
     async create_item (item) {
-      const CONTRACT_NAME = 'book.bookshop.testnet'
+      const CONTRACT_NAME = 'book2.bookshop.testnet'
       const direccionIpfs = '.ipfs.dweb.link'
       // connect to NEAR
       const near = await connect(
@@ -194,14 +194,14 @@ export default {
       await this.$axios.$post('/api/uploader/categoria', formData).then((data) => {
         contract.set_category({
           name: this.item.nombre,
-          img: data.data + direccionIpfs + '/' + data.nombre
+          img: 'https://' + data.data + direccionIpfs + '/' + data.nombre
         }).then((response) => {
           this.fetch_data()
         })
       })
     },
     async update_item (item) {
-      const CONTRACT_NAME = 'book.bookshop.testnet'
+      const CONTRACT_NAME = 'book2.bookshop.testnet'
       const direccionIpfs = '.ipfs.dweb.link'
       // connect to NEAR
       const near = await connect(
@@ -219,7 +219,7 @@ export default {
         contract.put_category({
           category_id: this.item.id,
           name: this.item.nombre,
-          img: data.data + direccionIpfs + '/' + data.nombre
+          img: 'https://' + data.data + direccionIpfs + '/' + data.nombre
         }).then((response) => {
           this.fetch_data()
         })

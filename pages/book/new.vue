@@ -265,7 +265,7 @@
 <script>
 import * as nearAPI from 'near-api-js'
 import { CONFIG } from '@/services/api'
-const { connect, keyStores, WalletConnection, Contract } = nearAPI
+const { connect, keyStores, WalletConnection, Contract, utils } = nearAPI
 
 export default {
   data () {
@@ -323,7 +323,7 @@ export default {
     },
     async getCategorias () {
       this.categorias = []
-      const CONTRACT_NAME = 'book.bookshop.testnet'
+      const CONTRACT_NAME = 'book2.bookshop.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
@@ -341,7 +341,7 @@ export default {
       }
     },
     async create_item () {
-      const CONTRACT_NAME = 'book.bookshop.testnet'
+      const CONTRACT_NAME = 'book2.bookshop.testnet'
       const direccionIpfs = '.ipfs.dweb.link'
       // connect to NEAR
       const near = await connect(
@@ -367,8 +367,8 @@ export default {
               copies: this.copies,
               extra: 'https://' + data.data + direccionIpfs + '/' + data.nombre_cover
             },
-            category: [1, 2],
-            price: '1000000000000000000000000',
+            category: this.genres,
+            price: utils.format.parseNearAmount(this.price),
             royalty: {
               'hpalencia.test.testnet': 1000
             }

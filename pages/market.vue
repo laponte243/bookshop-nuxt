@@ -43,7 +43,7 @@
                       {{ item.metadata.description }}
                     </p>
                     <v-btn
-                      to="/book/1"
+                      :to="'/book/'+item.token_series_id"
                       class="mx-2 secondary"
                       icon
                     >
@@ -114,7 +114,7 @@ export default {
       this.$router.push({ name: 'product' })
     },
     async nftTokensContract () {
-      const CONTRACT_NAME = 'book.bookshop.testnet'
+      const CONTRACT_NAME = 'book2.bookshop.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
