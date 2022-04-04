@@ -9,20 +9,11 @@
         sm="6"
         md="3"
       >
-        <v-text-field
-          label="Titulo"
-          solo
-          dense
-        />
-      </v-col>
-      <v-col
-        cols="12"
-        sm="6"
-        md="3"
-      >
         <v-select
-          :items="items"
+          :items="categorias"
           label="Categoria"
+          item-value="id"
+          item-text="name"
           dense
           solo
         />
@@ -33,7 +24,7 @@
         md="3"
       >
         <v-select
-          :items="items"
+          :items="autores"
           label="Autor"
           dense
           solo
@@ -121,12 +112,12 @@
             <v-card
               class="hover"
               align="center"
-              style="border: 0; border-color: #ffffff"
             >
               <v-img
                 class="white--text align-end imgOffers"
                 :src="item.metadata.extra"
-              />
+              >
+              </v-img>
               <v-card-text class="text--primary text-left">
                 <div>
                   <div style="font-size:16px; color: #9575CD">
@@ -137,11 +128,11 @@
                   {{ item.creator_id }}
                 </div>
                 <div>
-                  {{ item.metadata.price }}
+                  <strong>{{ formatPrice(item.price) }} Near </strong>
                 </div>
-                <!-- <div>
+                <div>
                   {{ item.metadata.copies }} Copias
-                </div> -->
+                </div>
               </v-card-text>
 
               <!-- <div class="text-right">
@@ -173,7 +164,7 @@
 <script>
 import * as nearAPI from 'near-api-js'
 import { CONFIG } from '@/services/api'
-const { connect, keyStores, WalletConnection, Contract } = nearAPI
+const { connect, keyStores, WalletConnection, Contract, utils } = nearAPI
 
 export default {
   name: 'MarketBook',
@@ -211,18 +202,24 @@ export default {
           copy: '10 Copias'
         }
       ],
-      dataNftTokens: []
+      dataNftTokens: [],
+      categorias: [],
+      autores: []
     }
   },
   mounted () {
     this.nftTokensContract()
+    this.getCategorias()
   },
   methods: {
     viewProduct () {
       this.$router.push({ name: 'product' })
     },
+    formatPrice (price) {
+      return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))
+    },
     async nftTokensContract () {
-      const CONTRACT_NAME = 'book2.bookshop.testnet'
+      const CONTRACT_NAME = 'book3.bookshop.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
@@ -230,15 +227,29 @@ export default {
       // create wallet connection
       const wallet = new WalletConnection(near)
       const contract = new Contract(wallet.account(), CONTRACT_NAME, {
-        viewMethods: ['get_nft_series'],
+        viewMethods: ['get_market'],
         sender: wallet.account()
       })
-      await contract.get_nft_series({
-        from_index: '0',
-        limit: 20
-      }).then((response) => {
-        // console.log(response)
+      await contract.get_market().then((response) => {
+        console.log(response)
         this.dataNftTokens = response
+      })
+    },
+    async getCategorias () {
+      this.categorias = []
+      const CONTRACT_NAME = 'book3.bookshop.testnet'
+      // connect to NEAR
+      const near = await connect(
+        CONFIG(new keyStores.BrowserLocalStorageKeyStore())
+      )
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_category'],
+        sender: wallet.account()
+      })
+      await contract.get_category().then((response) => {
+        this.categorias = response
       })
     }
   }
@@ -287,9 +298,6 @@ export default {
   top: 0;
   padding-left: 10px;
 } */
-.v-sheet.v-card:not(.v-sheet--outlined) {
-  box-shadow: 0px 0px 0px 0px rgb(0 0 0 / 20%), 0px 0px 0px 0px rgb(0 0 0 / 14%), 0px 0px 0px 0px rgb(0 0 0 / 12%);
-}
 @media (min-width: 320px) and (max-width: 425px) {
   /*Aquí van todos los estilos CSS*/
 }

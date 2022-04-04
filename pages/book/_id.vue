@@ -19,7 +19,7 @@
             </p>
             <v-card-actions class="pa-0">
               <p class="text-h5 font-weight-light pt-3">
-                {{ dataNftToken.price }}
+                {{ formatPrice(dataNftToken.price) }} Near
               </p>
               <v-spacer />
               <v-rating
@@ -48,10 +48,20 @@
       <v-row class="row">
         <div class="col-sm-12 col-xs-12 col-md-12">
           <v-tabs>
-            <v-tab>Description</v-tab>
-            <v-tab>REVIEWS</v-tab>
+            <v-tab>About Author</v-tab>
+            <v-tab>Reviews</v-tab>
             <v-tab-item>
-              <p class="pt-10 text-subtitle-1 font-weight-thin">
+              <h5
+                v-if="author.pen_name"
+              >
+                {{author.pen_name}}
+              </h5>
+              <h5
+                v-else
+              >
+                {{author.pen_name}}
+              </h5>
+              <p class="text-subtitle-1 font-weight-thin">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 Ultricies mi eget mauris pharetra et. Vel pretium lectus quam id
@@ -87,37 +97,59 @@
 <script>
 import * as nearAPI from 'near-api-js'
 import { CONFIG } from '@/services/api'
-const { connect, keyStores, WalletConnection, Contract } = nearAPI
+const { connect, keyStores, WalletConnection, Contract, utils } = nearAPI
 export default {
   data () {
     return {
       serieId: this.$route.params.id,
-      dataNftToken: null
+      dataNftToken: null,
+      author: null
     }
   },
   mounted () {
     this.nftTokensContract()
   },
   methods: {
+    formatPrice (price) {
+      return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))
+    },
     async nftTokensContract () {
-      const CONTRACT_NAME = 'book2.bookshop.testnet'
+      const CONTRACT_NAME = 'book3.bookshop.testnet'
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
       )
       const wallet = new WalletConnection(near)
       const contract = new Contract(wallet.account(), CONTRACT_NAME, {
-        viewMethods: ['get_nft_series_single'],
+        viewMethods: ['get_market_single'],
         sender: wallet.account()
       })
-      await contract.get_nft_series_single({
+      await contract.get_market_single({
         token_series_id: this.serieId
       }).then((response) => {
         console.log(response)
         this.dataNftToken = response
+        this.getAuthor(response.creator_id)
+      })
+    },
+    async getAuthor (author) {
+      const CONTRACT_NAME = 'book3.bookshop.testnet'
+      const near = await connect(
+        CONFIG(new keyStores.BrowserLocalStorageKeyStore())
+      )
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_profile'],
+        sender: wallet.account()
+      })
+      await contract.get_profile({
+        user_id: author
+      }).then((response) => {
+        console.log(response)
+        this.author = response
       })
     },
     async buy_nft () {
-      const CONTRACT_NAME = 'book2.bookshop.testnet'
+      const CONTRACT_NAME = 'book3.bookshop.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
@@ -132,7 +164,7 @@ export default {
         token_series_id: this.serieId,
         receiver_id: wallet.getAccountId()
       }, '300000000000000', // attached GAS (optional)
-      '30000000000000000000000000').then((response) => {
+      this.dataNftToken.price.toLocaleString('fullwide', { useGrouping: false })).then((response) => {
         // console.log(response)
       })
     }
