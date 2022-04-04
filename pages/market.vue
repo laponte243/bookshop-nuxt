@@ -128,7 +128,7 @@
                   {{ item.creator_id }}
                 </div>
                 <div>
-                  <strong>{{ formatPrice(item.price) }} Near </strong>
+                  <strong>{{ formatPrice(item.price) }} NEAR </strong>
                 </div>
                 <div>
                   {{ item.metadata.copies }} Copias
