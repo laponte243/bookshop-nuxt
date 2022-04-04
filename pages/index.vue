@@ -19,7 +19,7 @@
         <v-carousel-item
           v-for="(itemC,i) in itemsCarousel"
           :key="i"
-          class="mt-7"
+          class="pt-7"
         >
           <v-row
             align="center"
@@ -242,6 +242,7 @@
                 hide-delimiters
                 show-arrows-on-hover
                 height="230"
+                class="mt-2"
               >
                 <v-carousel-item
                   v-for="(itemsW, i) in writes"
@@ -335,7 +336,7 @@
                 Ofertas del día
               </v-card-title>
               <v-divider />
-              <div class="row">
+              <div class="row mt-2">
                 <div
                   v-for="(itemsO, i) in offers"
                   :key="i"
@@ -348,17 +349,19 @@
                     <v-card
                       :elevation="hover ? 16 : 2"
                       align="center"
+                      style="border: 0;"
                     >
                       <v-img
                         class="white--text align-end imgOffers"
                         :src="require('~/assets/img/' + itemsO.img)"
-                      >
-                        <v-card-title>
-                          {{ itemsO.name }}
-                        </v-card-title>
-                      </v-img>
+                      />
 
                       <v-card-text class="text--primary text-left">
+                        <div>
+                          <strong>
+                            {{ itemsO.name }}
+                          </strong>
+                        </div>
                         <div>
                           <strong>
                             {{ itemsO.Author }}
@@ -514,24 +517,24 @@ export default {
 }
 </script>
 <style>
-  .v-card--reveal {
+  /* .v-card--reveal {
     align-items: center;
     bottom: 0;
     justify-content: center;
     opacity: 0.85;
     position: absolute;
     width: 100%;
-  }
+  } */
   .carousel {
     background-image: url("~assets/img/home/fondoCarousel.png");
     background-size: 101% 100%;
   }
   .hover:hover {
-    transform: scale(1.1);
+    transform: scale(1);
     box-shadow: 3px 3px 30px 15px gray;
   }
   .hover2:hover {
-    transform: scale(1);
+    transform: scale(1.1);
     box-shadow: 3px 3px 10px 5px gray;
   }
   .v-btn .v-btn__content .v-icon {

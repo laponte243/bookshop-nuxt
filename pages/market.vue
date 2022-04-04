@@ -1,11 +1,67 @@
 <template>
   <div>
-    <v-container class="pt-12 mt-12">
-      <v-row class="ul1">
-        <v-col
+    <v-row
+      style="background-color: #C0C0DC"
+      class="pt-6 pl-10 pr-10"
+    >
+      <v-col
+        cols="12"
+        sm="6"
+        md="3"
+      >
+        <v-text-field
+          label="Titulo"
+          solo
+          dense
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+        md="3"
+      >
+        <v-select
+          :items="items"
+          label="Categoria"
+          dense
+          solo
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+        md="3"
+      >
+        <v-select
+          :items="items"
+          label="Autor"
+          dense
+          solo
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+        md="3"
+      >
+        <v-btn
+          color="#8C30F5"
+          class="white--text"
+          block
+        >
+          <v-icon class="white--text">
+            mdi-magnify
+          </v-icon>
+          Buscar libro
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-container class="pt-8 mt-8">
+      <v-row class="ul1 container">
+        <!-- <v-col
           v-for="(item, i) in dataNftTokens"
           :key="i"
-          class="col-xs-12 col-sm-4 col-md-2 li1"
+          class="col-xs-12 col-sm-4 col-md-3 li1"
         >
           <v-hover v-slot="{ hover }">
             <v-card
@@ -19,14 +75,13 @@
                 <v-expand-transition>
                   <div
                     v-if="hover"
-                    class="transition-fast-in-fast-out primary darken-2 v-card--reveal white--text"
+                    class="transition-fast-in-fast-out primary  v-card--reveal white--text"
                     style="height: 100%;"
                   >
                     <h4>
                       {{ item.metadata.title }}
                     </h4>
                     <h5>
-                      <!--{{ item.metadata.price }}-->
                       <strong>
                         {{ item.metadata.price }}
                       </strong>
@@ -56,7 +111,60 @@
               </v-img>
             </v-card>
           </v-hover>
-        </v-col>
+        </v-col> -->
+        <div
+          v-for="(item, i) in dataNftTokens"
+          :key="i"
+          class="col-xs-6 col-sm-4 col-md-3 col text-center"
+        >
+          <router-link :to="'/book/' + item.token_series_id" class="text-decoration-none">
+            <v-card
+              class="hover"
+              align="center"
+              style="border: 0; border-color: #ffffff"
+            >
+              <v-img
+                class="white--text align-end imgOffers"
+                :src="item.metadata.extra"
+              />
+              <v-card-text class="text--primary text-left">
+                <div>
+                  <div style="font-size:16px; color: #9575CD">
+                    {{ item.metadata.title }}
+                  </div>
+                </div>
+                <div>
+                  {{ item.creator_id }}
+                </div>
+                <div>
+                  {{ item.metadata.price }}
+                </div>
+                <!-- <div>
+                  {{ item.metadata.copies }} Copias
+                </div> -->
+              </v-card-text>
+
+              <!-- <div class="text-right">
+                <v-btn
+                  href="/shop"
+                  class="ma-2"
+                  outlined
+                  color="info"
+                >
+                  Explorar
+                </v-btn>
+                <v-btn
+                  :to="'/book/' + item.token_series_id"
+                  color="deep-purple lighten-2"
+                  text
+                  @click="reserve"
+                >
+                  Explorar
+                </v-btn>
+              </div> -->
+            </v-card>
+          </router-link>
+        </div>
       </v-row>
     </v-container>
   </div>
@@ -68,7 +176,7 @@ import { CONFIG } from '@/services/api'
 const { connect, keyStores, WalletConnection, Contract } = nearAPI
 
 export default {
-  name: 'market',
+  name: 'MarketBook',
 
   data () {
     return {
@@ -125,15 +233,13 @@ export default {
         viewMethods: ['get_nft_series'],
         sender: wallet.account()
       })
-      if (wallet.isSignedIn()) {
-        await contract.get_nft_series({
-          from_index: '0',
-          limit: 20
-        }).then((response) => {
-          console.log(response)
-          this.dataNftTokens = response
-        })
-      }
+      await contract.get_nft_series({
+        from_index: '0',
+        limit: 20
+      }).then((response) => {
+        // console.log(response)
+        this.dataNftTokens = response
+      })
     }
   }
 }
@@ -145,7 +251,7 @@ export default {
 .li1 {
   display: inline-block;
 }
-.imgOffers {
+/* .imgOffers {
   filter: brightness(50%);
   -webkit-filter: brightness(50%);
   -moz-filter: brightness(50%);
@@ -153,25 +259,36 @@ export default {
   -ms-filter: brightness(50%);
   height: 476.5px;
   width: 290px;
-}
+} */
+.imgOffers {
+    width: 265px;
+    height: 350px;
+  }
 .hover2:hover {
   display: inline-block;
   background: #6868ac;
 }
-
-.imgOffers:hover {
-  opacity: 0.3;
+.hover:hover {
+  transform: scale(1.1);
+  box-shadow: 3px 3px 30px 15px gray;
 }
+
+/* .imgOffers:hover {
+  opacity: 0.3;
+} */
 .textHover {
   display: none;
 }
-.hover2 .imgOffers:hover ~ .textHover {
+/* .hover2 .imgOffers:hover ~ .textHover {
   display: inline-block;
   color: #fff;
   position: absolute;
   z-index: 1;
   top: 0;
   padding-left: 10px;
+} */
+.v-sheet.v-card:not(.v-sheet--outlined) {
+  box-shadow: 0px 0px 0px 0px rgb(0 0 0 / 20%), 0px 0px 0px 0px rgb(0 0 0 / 14%), 0px 0px 0px 0px rgb(0 0 0 / 12%);
 }
 @media (min-width: 320px) and (max-width: 425px) {
   /*Aquí van todos los estilos CSS*/

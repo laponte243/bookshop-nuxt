@@ -4,7 +4,7 @@
       <v-row
         v-if="dataNftToken"
       >
-        <v-col class="col-md-5 col-sm-5 col-xs-12 text-center">
+        <v-col class="col-md-4 col-sm-4 col-xs-12 pl-8">
           <v-img
             :src="dataNftToken.metadata.extra"
             width="350"
@@ -12,7 +12,7 @@
             style="box-shadow: 30px 20px 5px #6868ac"
           />
         </v-col>
-        <v-col class="col-md-7 col-sm-7 col-xs-12">
+        <v-col class="col-md-8 col-sm-8 col-xs-12">
           <div class="pl-6">
             <p class="text-h4 mb-0" style="color: #7474b3">
               {{ dataNftToken.metadata.title }}
@@ -39,7 +39,7 @@
             <p class="text-subtitle-1 font-weight-thin">
               {{ dataNftToken.metadata.copies }} Disponibles
             </p>
-            <v-btn color="#7474B3" class="white--text" dense large>
+            <v-btn color="#7474B3" class="white--text" dense large @click="buy_nft()">
               Comprar
             </v-btn>
           </div>
@@ -109,16 +109,32 @@ export default {
         viewMethods: ['get_nft_series_single'],
         sender: wallet.account()
       })
-      if (wallet.isSignedIn()) {
-        await contract
-          .get_nft_series_single({
-            token_series_id: this.serieId
-          })
-          .then((response) => {
-            console.log(response)
-            this.dataNftToken = response
-          })
-      }
+      await contract.get_nft_series_single({
+        token_series_id: this.serieId
+      }).then((response) => {
+        console.log(response)
+        this.dataNftToken = response
+      })
+    },
+    async buy_nft () {
+      const CONTRACT_NAME = 'book2.bookshop.testnet'
+      // connect to NEAR
+      const near = await connect(
+        CONFIG(new keyStores.BrowserLocalStorageKeyStore())
+      )
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        changeMethods: ['nft_buy'],
+        sender: wallet.account()
+      })
+      await contract.nft_buy({
+        token_series_id: this.serieId,
+        receiver_id: wallet.getAccountId()
+      }, '300000000000000', // attached GAS (optional)
+      '30000000000000000000000000').then((response) => {
+        // console.log(response)
+      })
     }
   }
 }

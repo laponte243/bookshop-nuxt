@@ -2,6 +2,7 @@
   <v-app>
     <v-app-bar
       :clipped-left="clipped"
+      color="#ffffff"
       fixed
       app
     >
@@ -19,9 +20,20 @@
           </v-col>
           <v-col>
             <v-btn
+              to="/"
+              class="mx-2"
+              icon
+              title="Inicio"
+            >
+              <v-icon>
+                mdi-home
+              </v-icon>
+            </v-btn>
+            <v-btn
               to="/market"
               class="mx-2"
               icon
+              title="Mercado"
             >
               <v-icon>
                 mdi-shopping-outline
@@ -31,6 +43,7 @@
               to="/library"
               class="mx-2"
               icon
+              title="Libreria"
             >
               <v-icon>
                 mdi-book-multiple
@@ -40,6 +53,7 @@
               to="/book/new"
               class="mx-2"
               icon
+              title="Nuevo Libro"
             >
               <v-icon>
                 mdi-book-plus
