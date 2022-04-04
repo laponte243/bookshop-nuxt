@@ -51,16 +51,6 @@
             <v-tab>About Author</v-tab>
             <v-tab>Reviews</v-tab>
             <v-tab-item>
-              <h5
-                v-if="author.pen_name"
-              >
-                {{author.pen_name}}
-              </h5>
-              <h5
-                v-else
-              >
-                {{author.pen_name}}
-              </h5>
               <p class="text-subtitle-1 font-weight-thin">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.

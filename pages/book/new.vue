@@ -374,7 +374,7 @@ export default {
             }
           },
           '300000000000000',
-          '15200000000000000000000'
+          '20000000000000000000000'
         ).then((response) => {
           console.log(response)
         }).catch((error) => {

@@ -155,7 +155,7 @@ export default {
       // create wallet connection
       const wallet = new WalletConnection(near)
       wallet.requestSignIn(
-        'book2.bookshop.testnet'
+        'book3.bookshop.testnet'
       )
     },
     async isSigned () {
