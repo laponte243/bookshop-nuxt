@@ -78,67 +78,21 @@
               Generos
             </v-card-title>
             <v-divider />
-            <div class="row">
+            <div class="row d-none d-sm-flex pt-1">
               <div
-                class="col-md-6 col-sm-6 col-xs-12"
+                v-for="(item,i) in categorias"
+                :key="i"
+                class="col-md-4 col-sm-4 col-xs-12"
               >
-                <v-card>
-                  <v-img
-                    :src="require('~/assets/img/home/aventura.jpg')"
-                    class="white--text align-center generoImg"
-                    gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                  >
-                    <h1 class="text-center font-size">
-                      Aventura
-                    </h1>
-                    <div class="text-center">
-                      <v-btn
-                        href="#"
-                        class="white--text "
-                        outlined
-                      >
-                        Explorar
-                      </v-btn>
-                    </div>
-                  </v-img>
-                </v-card>
-              </div>
-              <div
-                class="col-md-6 col-sm-6 col-xs-12"
-              >
-                <v-card>
-                  <v-img
-                    :src="require('~/assets/img/home/ficcion.jpg')"
-                    class="white--text align-center generoImg"
-                    gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                  >
-                    <h1 class="text-center font-size">
-                      Ciencia Ficcion
-                    </h1>
-                    <div class="text-center">
-                      <v-btn
-                        href="#"
-                        class="white--text"
-                        outlined
-                      >
-                        Explorar
-                      </v-btn>
-                    </div>
-                  </v-img>
-                </v-card>
-              </div>
-            </div>
-            <div class="row d-none d-sm-flex">
-              <div class="col-md-4 col-sm-4 col-xs-12">
                 <v-card outlined>
                   <v-img
-                    :src="require('~/assets/img/home/romance.jpg')"
+                    :src="item.imagen"
                     class="white--text align-center"
                     gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                     height="300px"
                   >
                     <h1 class="text-center font-size">
-                      Romance
+                      {{ item.nombre }}
                     </h1>
                     <div class="text-center mt-2">
                       <v-btn
@@ -148,61 +102,6 @@
                       >
                         Explorar
                         <v-icon class="white--text textcaption">
-                          mdi-arrow-right
-                        </v-icon>
-                      </v-btn>
-                    </div>
-                  </v-img>
-                </v-card>
-              </div>
-              <div
-                class="col-md-4 col-sm-4 col-xs-12"
-              >
-                <v-card outlined>
-                  <v-img
-                    :src="require('~/assets/img/home/terror.jpg')"
-                    class="white--text align-center"
-                    gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                    height="300px"
-                  >
-                    <h1 class="text-center font-size">
-                      Terror
-                    </h1>
-                    <div class="text-center mt-2">
-                      <v-btn
-                        class="white--text text-caption"
-                        href="#"
-                        text
-                      >
-                        Explorar
-                        <v-icon class="white--text text-caption">
-                          mdi-arrow-right
-                        </v-icon>
-                      </v-btn>
-                    </div>
-                  </v-img>
-                </v-card>
-              </div>
-              <div
-                class="col-md-4 col-sm-4 col-xs-12"
-              >
-                <v-card outlined>
-                  <v-img
-                    :src="require('~/assets/img/home/libro7.jpg')"
-                    class="white--text align-center"
-                    gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                    height="300px"
-                  >
-                    <h1 class="text-center font-size">
-                      Fantasia
-                    </h1>
-                    <div class="text-center mt-2">
-                      <v-btn
-                        class="white--text text-caption"
-                        text
-                      >
-                        Explorar
-                        <v-icon class="white--text text-caption">
                           mdi-arrow-right
                         </v-icon>
                       </v-btn>
@@ -434,10 +333,14 @@
 </template>
 
 <script>
+import * as nearAPI from 'near-api-js'
+import { CONFIG } from '@/services/api'
+const { connect, keyStores, WalletConnection, Contract } = nearAPI
 export default {
   name: 'LandingPage',
   data () {
     return {
+      categorias: [],
       itemsCarousel: [
         {
           src1: 'home/libro2.jpg',
@@ -512,6 +415,30 @@ export default {
           copy: '10 Copias'
         }
       ]
+    }
+  },
+  mounted () {
+    this.fetch_data()
+  },
+  methods: {
+    async fetch_data () {
+      this.categorias = []
+      const CONTRACT_NAME = 'book3.bookshop.testnet'
+      // connect to NEAR
+      const near = await connect(
+        CONFIG(new keyStores.BrowserLocalStorageKeyStore())
+      )
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        viewMethods: ['get_category'],
+        sender: wallet.account()
+      })
+      await contract.get_category().then((response) => {
+        response.forEach((element) => {
+          this.categorias.push({ id: element.id, nombre: element.name, imagen: element.img })
+        })
+      })
     }
   }
 }

@@ -362,10 +362,10 @@ export default {
             token_metadata: {
               title: this.title,
               description: this.description,
-              media: 'https://' + data.data + direccionIpfs + '/' + data.nombre_libro,
+              media: 'https://' + data.data + direccionIpfs + '/' + data.nombre_cover,
               reference: data.data,
               copies: this.copies,
-              extra: 'https://' + data.data + direccionIpfs + '/' + data.nombre_cover
+              extra: 'https://' + data.data + direccionIpfs + '/' + data.nombre_libro
             },
             category: this.genres,
             price: utils.format.parseNearAmount(this.price),

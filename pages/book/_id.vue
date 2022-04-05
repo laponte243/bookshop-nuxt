@@ -6,7 +6,7 @@
       >
         <v-col class="col-md-4 col-sm-4 col-xs-12 pl-8">
           <v-img
-            :src="dataNftToken.metadata.extra"
+            :src="dataNftToken.metadata.media"
             width="350"
             height="500"
             style="box-shadow: 30px 20px 5px #6868ac"

@@ -3,6 +3,7 @@
     <v-row
       style="background-color: #C0C0DC"
       class="pt-6 pl-10 pr-10"
+      justify="center"
     >
       <v-col
         cols="12"
@@ -10,12 +11,14 @@
         md="3"
       >
         <v-select
+          v-model="categoria"
           :items="categorias"
           label="Categoria"
           item-value="id"
           item-text="name"
           dense
           solo
+          clearable
         />
       </v-col>
       <v-col
@@ -24,10 +27,12 @@
         md="3"
       >
         <v-select
+          v-model="autor"
           :items="autores"
           label="Autor"
           dense
           solo
+          clearable
         />
       </v-col>
       <v-col
@@ -39,6 +44,7 @@
           color="#8C30F5"
           class="white--text"
           block
+          @click="nftTokensContract"
         >
           <v-icon class="white--text">
             mdi-magnify
@@ -49,60 +55,6 @@
     </v-row>
     <v-container class="pt-8 mt-8">
       <v-row class="ul1 container">
-        <!-- <v-col
-          v-for="(item, i) in dataNftTokens"
-          :key="i"
-          class="col-xs-12 col-sm-4 col-md-3 li1"
-        >
-          <v-hover v-slot="{ hover }">
-            <v-card
-              class="mx-auto"
-              color="grey lighten-4"
-            >
-              <v-img
-                :aspect-ratio="10/16"
-                :src="item.metadata.extra"
-              >
-                <v-expand-transition>
-                  <div
-                    v-if="hover"
-                    class="transition-fast-in-fast-out primary  v-card--reveal white--text"
-                    style="height: 100%;"
-                  >
-                    <h4>
-                      {{ item.metadata.title }}
-                    </h4>
-                    <h5>
-                      <strong>
-                        {{ item.metadata.price }}
-                      </strong>
-                    </h5>
-                    <h5>
-                      {{ item.metadata.copies }} copias
-                    </h5>
-                    <br>
-                    <h5>
-                      {{ item.creator_id }}
-                    </h5>
-                    <br>
-                    <p>
-                      {{ item.metadata.description }}
-                    </p>
-                    <v-btn
-                      :to="'/book/'+item.token_series_id"
-                      class="mx-2 secondary"
-                      icon
-                    >
-                      <v-icon>
-                        mdi-magnify
-                      </v-icon>
-                    </v-btn>
-                  </div>
-                </v-expand-transition>
-              </v-img>
-            </v-card>
-          </v-hover>
-        </v-col> -->
         <div
           v-for="(item, i) in dataNftTokens"
           :key="i"
@@ -115,7 +67,7 @@
             >
               <v-img
                 class="white--text align-end imgOffers"
-                :src="item.metadata.extra"
+                :src="item.metadata.media"
               >
               </v-img>
               <v-card-text class="text--primary text-left">
@@ -134,25 +86,6 @@
                   {{ item.metadata.copies }} Copias
                 </div>
               </v-card-text>
-
-              <!-- <div class="text-right">
-                <v-btn
-                  href="/shop"
-                  class="ma-2"
-                  outlined
-                  color="info"
-                >
-                  Explorar
-                </v-btn>
-                <v-btn
-                  :to="'/book/' + item.token_series_id"
-                  color="deep-purple lighten-2"
-                  text
-                  @click="reserve"
-                >
-                  Explorar
-                </v-btn>
-              </div> -->
             </v-card>
           </router-link>
         </div>
@@ -204,7 +137,9 @@ export default {
       ],
       dataNftTokens: [],
       categorias: [],
-      autores: []
+      autores: [],
+      autor: null,
+      categoria: null
     }
   },
   mounted () {
@@ -230,8 +165,14 @@ export default {
         viewMethods: ['get_market'],
         sender: wallet.account()
       })
-      await contract.get_market().then((response) => {
-        console.log(response)
+      const filtro = {}
+      if (this.categoria) {
+        filtro.category = this.categoria
+      }
+      if (this.autor) {
+        filtro.creator_id = this.autor
+      }
+      await contract.get_market(filtro).then((response) => {
         this.dataNftTokens = response
       })
     },
@@ -245,11 +186,14 @@ export default {
       // create wallet connection
       const wallet = new WalletConnection(near)
       const contract = new Contract(wallet.account(), CONTRACT_NAME, {
-        viewMethods: ['get_category'],
+        viewMethods: ['get_category', 'get_author_market'],
         sender: wallet.account()
       })
       await contract.get_category().then((response) => {
         this.categorias = response
+      })
+      await contract.get_author_market().then((response) => {
+        this.autores = response
       })
     }
   }
