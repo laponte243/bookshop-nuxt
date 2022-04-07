@@ -117,60 +117,6 @@
                           number
                         />
                       </v-col>
-                      <v-col
-                        cols="12"
-                        sm="12"
-                        md="6"
-                        lg="6"
-                      >
-                        <v-row>
-                          <v-col
-                            cols="12"
-                            sm="12"
-                            md="12"
-                            lg="5"
-                          >
-                            <v-text-field
-                              v-model="subitem.wallet"
-                              :rules="[v => (v || '' ).length <= 40 || '40 caracteres o menos']"
-                              label="Wallet Near"
-                              append-icon="mdi-account"
-                              outlined
-                            />
-                          </v-col>
-                          <v-col
-                            cols="12"
-                            sm="12"
-                            md="12"
-                            lg="5"
-                          >
-                            <v-text-field
-                              v-model="subitem.percent"
-                              :rules="percentRule"
-                              label="Porcentaje"
-                              append-icon="mdi-percent"
-                              outlined
-                            />
-                          </v-col>
-                          <v-col
-                            cols="12"
-                            sm="12"
-                            md="12"
-                            lg="2"
-                          >
-                            <v-btn
-                              light
-                              color="indigo"
-                              icon
-                              fab
-                            >
-                              <v-icon>
-                                mdi-plus
-                              </v-icon>
-                            </v-btn>
-                          </v-col>
-                        </v-row>
-                      </v-col>
                     </v-row>
                   </div>
                 </v-card-text>
@@ -183,15 +129,118 @@
               Continuar
             </v-btn>
           </v-stepper-content>
+          <v-stepper-step step="2">
+            Regalias
+          </v-stepper-step>
+          <v-stepper-content step="2">
+            <v-container>
+              <v-card
+                outlined
+                elevation="5"
+              >
+                <v-card-text>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      sm="12"
+                      md="6"
+                      lg="6"
+                    >
+                      <v-row>
+                        <v-col
+                          cols="12"
+                          sm="12"
+                          md="12"
+                          lg="5"
+                        >
+                          <v-text-field
+                            v-model="subitem.wallet"
+                            :rules="[v => (v || '' ).length <= 40 || '40 caracteres o menos']"
+                            label="Wallet Near"
+                            append-icon="mdi-account"
+                            outlined
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="12"
+                          md="12"
+                          lg="5"
+                        >
+                          <v-text-field
+                            v-model="subitem.percent"
+                            :rules="percentRule"
+                            label="Porcentaje"
+                            append-icon="mdi-percent"
+                            outlined
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          sm="12"
+                          md="12"
+                          lg="2"
+                        >
+                          <v-btn
+                            light
+                            color="indigo"
+                            icon
+                            fab
+                            @click="addSubitem"
+                          >
+                            <v-icon>
+                              mdi-plus
+                            </v-icon>
+                          </v-btn>
+                        </v-col>
+                      </v-row>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="12"
+                      md="6"
+                      lg="6"
+                    >
+                      <v-list
+                        outlined
+                      >
+                        <v-list-item
+                          v-for="(item, i) in regalias"
+                          :key="i"
+                        >
+                          <v-list-item-content>
+                            <v-list-item-title v-text="item.wallet"></v-list-item-title>
+                            <v-list-item-subtitle v-text="item.percent+'%'"></v-list-item-subtitle>
+                          </v-list-item-content>
 
+                          <v-list-item-avatar>
+                            <v-icon
+                              color="pink"
+                            >
+                              mdi-account
+                            </v-icon>
+                          </v-list-item-avatar>
+                        </v-list-item>
+                      </v-list>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-card>
+              <v-btn
+                color="primary"
+                @click="e6 = 3"
+              >
+                Continuar
+              </v-btn>
+            </v-container>
+          </v-stepper-content>
           <v-stepper-step
             :complete="e6 > 3"
-            step="2"
+            step="3"
           >
             Hora de subir tu libro!
           </v-stepper-step>
-
-          <v-stepper-content step="2">
+          <v-stepper-content step="3">
             <v-container>
               <v-card
                 outlined
@@ -235,16 +284,16 @@
             </v-container>
             <v-btn
               color="primary"
-              @click="e6 = 3"
+              @click="e6 = 4"
             >
               Continuar
             </v-btn>
           </v-stepper-content>
 
-          <v-stepper-step step="3">
+          <v-stepper-step step="4">
             Términos y Condiciones
           </v-stepper-step>
-          <v-stepper-content step="3">
+          <v-stepper-content step="4">
             <v-card
               color="grey lighten-1"
               class="mb-12"
@@ -280,6 +329,7 @@ export default {
       url: null,
       genres: [],
       categorias: [],
+      regalias: [],
       subitem: {
         wallet: null,
         percent: null
@@ -305,6 +355,13 @@ export default {
     Preview_image () {
       this.url = URL.createObjectURL(this.cover)
     },
+    addSubitem () {
+      this.regalias.push(this.subitem)
+      this.subitem = {
+        wallet: null,
+        percent: null
+      }
+    },
     async ipfs_send () {
       const formData = new FormData()
       formData.append('cover', this.cover)
@@ -323,7 +380,7 @@ export default {
     },
     async getCategorias () {
       this.categorias = []
-      const CONTRACT_NAME = 'book3.bookshop.testnet'
+      const CONTRACT_NAME = 'book4.bookshop.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
@@ -341,7 +398,7 @@ export default {
       }
     },
     async create_item () {
-      const CONTRACT_NAME = 'book3.bookshop.testnet'
+      const CONTRACT_NAME = 'book4.bookshop.testnet'
       const direccionIpfs = '.ipfs.dweb.link'
       // connect to NEAR
       const near = await connect(
@@ -356,6 +413,10 @@ export default {
       const formData = new FormData()
       formData.append('cover', this.cover)
       formData.append('book', this.book)
+      const relagia = []
+      this.regalias.forEach((element) => {
+        relagia[element.wallet] = element.percent
+      })
       await this.$axios.$post('/api/uploader/web3storage', formData).then((data) => {
         contract.nft_series(
           {
@@ -364,14 +425,12 @@ export default {
               description: this.description,
               media: 'https://' + data.data + direccionIpfs + '/' + data.nombre_cover,
               reference: data.data,
-              copies: this.copies,
+              copies: parseInt(this.copy),
               extra: 'https://' + data.data + direccionIpfs + '/' + data.nombre_libro
             },
             category: this.genres,
             price: utils.format.parseNearAmount(this.price),
-            royalty: {
-              'hpalencia.test.testnet': 1000
-            }
+            royalty: relagia
           },
           '300000000000000',
           '1000000000000000000000000'

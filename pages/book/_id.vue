@@ -48,22 +48,7 @@
       <v-row class="row">
         <div class="col-sm-12 col-xs-12 col-md-12">
           <v-tabs>
-            <v-tab>About Author</v-tab>
             <v-tab>Reviews</v-tab>
-            <v-tab-item>
-              <p class="text-subtitle-1 font-weight-thin">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ultricies mi eget mauris pharetra et. Vel pretium lectus quam id
-                leo in vitae turpis massa. Orci dapibus ultrices in iaculis
-                nunc. At auctor urna nunc id cursus metus. Integer feugiat
-                scelerisque varius morbi enim nunc. Aliquam sem et tortor
-                consequat id porta nibh venenatis cras. Pellentesque pulvinar
-                pellentesque habitant morbi tristique senectus et netus.
-                Malesuada nunc vel risus commodo viverra maecenas. Neque
-                volutpat ac tincidunt vitae semper quis.
-              </p>
-            </v-tab-item>
             <v-tab-item>
               <p class="pt-10 text-subtitle-1 font-weight-thin">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -104,7 +89,7 @@ export default {
       return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))
     },
     async nftTokensContract () {
-      const CONTRACT_NAME = 'book3.bookshop.testnet'
+      const CONTRACT_NAME = 'book4.bookshop.testnet'
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
       )
@@ -116,13 +101,12 @@ export default {
       await contract.get_market_single({
         token_series_id: this.serieId
       }).then((response) => {
-        console.log(response)
         this.dataNftToken = response
         this.getAuthor(response.creator_id)
       })
     },
     async getAuthor (author) {
-      const CONTRACT_NAME = 'book3.bookshop.testnet'
+      const CONTRACT_NAME = 'book4.bookshop.testnet'
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
       )
@@ -134,12 +118,11 @@ export default {
       await contract.get_profile({
         user_id: author
       }).then((response) => {
-        console.log(response)
         this.author = response
       })
     },
     async buy_nft () {
-      const CONTRACT_NAME = 'book3.bookshop.testnet'
+      const CONTRACT_NAME = 'book4.bookshop.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())

@@ -423,7 +423,7 @@ export default {
   methods: {
     async fetch_data () {
       this.categorias = []
-      const CONTRACT_NAME = 'book3.bookshop.testnet'
+      const CONTRACT_NAME = 'book4.bookshop.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
