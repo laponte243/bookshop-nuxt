@@ -413,7 +413,7 @@ export default {
       const formData = new FormData()
       formData.append('cover', this.cover)
       formData.append('book', this.book)
-      const relagia = []
+      const relagia = {}
       this.regalias.forEach((element) => {
         relagia[element.wallet] = element.percent
       })
