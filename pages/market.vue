@@ -80,7 +80,7 @@
                   {{ item.creator_id }}
                 </div>
                 <div>
-                  <strong>{{ formatPrice(item.price) }} NEAR </strong>
+                  <strong>{{ formatPrice(item.price) }}Ⓝ </strong>
                 </div>
                 <div>
                   {{ item.metadata.copies }} Copias
@@ -154,7 +154,7 @@ export default {
       return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))
     },
     async nftTokensContract () {
-      const CONTRACT_NAME = 'book4.bookshop.testnet'
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
@@ -178,7 +178,7 @@ export default {
     },
     async getCategorias () {
       this.categorias = []
-      const CONTRACT_NAME = 'book4.bookshop.testnet'
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())

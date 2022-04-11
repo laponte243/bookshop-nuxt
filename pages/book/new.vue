@@ -24,6 +24,7 @@
           <v-stepper-step
             :complete="e6 > 1"
             step="1"
+            @click="e6 = 1"
           >
             Cuentanos sobre tu libro
           </v-stepper-step>
@@ -57,23 +58,6 @@
                         md="6"
                         lg="6"
                       >
-                        <v-textarea
-                          v-model="description"
-                          label="Descripción"
-                          clearable
-                          counter
-                          outlined
-                          :rules="[v => (v || '' ).length <= 255 || '255 caracteres o menos']"
-                          auto-grow
-                          append-icon="mdi-text"
-                        />
-                      </v-col>
-                      <v-col
-                        cols="12"
-                        sm="12"
-                        md="6"
-                        lg="6"
-                      >
                         <v-select
                           v-model="genres"
                           :items="categorias"
@@ -96,7 +80,7 @@
                         <v-text-field
                           v-model="price"
                           :rules="priceRule"
-                          label="Precio"
+                          label="Precio en Ⓝ"
                           append-icon="mdi-wallet"
                           outlined
                           number
@@ -117,6 +101,23 @@
                           number
                         />
                       </v-col>
+                      <v-col
+                        cols="12"
+                        sm="12"
+                        md="6"
+                        lg="6"
+                      >
+                        <v-textarea
+                          v-model="description"
+                          label="Descripción"
+                          clearable
+                          counter
+                          outlined
+                          :rules="[v => (v || '' ).length <= 255 || '255 caracteres o menos']"
+                          auto-grow
+                          append-icon="mdi-text"
+                        />
+                      </v-col>
                     </v-row>
                   </div>
                 </v-card-text>
@@ -129,7 +130,11 @@
               Continuar
             </v-btn>
           </v-stepper-content>
-          <v-stepper-step step="2">
+          <v-stepper-step
+            :complete="e6 > 2"
+            @click="e6 = 2"
+            step="2"
+          >
             Regalias
           </v-stepper-step>
           <v-stepper-content step="2">
@@ -237,6 +242,7 @@
           <v-stepper-step
             :complete="e6 > 3"
             step="3"
+            @click="e6 = 3"
           >
             Hora de subir tu libro!
           </v-stepper-step>
@@ -290,7 +296,11 @@
             </v-btn>
           </v-stepper-content>
 
-          <v-stepper-step step="4">
+          <v-stepper-step
+            :complete="e6 > 4"
+            @click="e6 = 3"
+            step="4"
+          >
             Términos y Condiciones
           </v-stepper-step>
           <v-stepper-content step="4">
@@ -299,12 +309,49 @@
               class="mb-12"
               height="200px"
             ></v-card>
-            <v-btn
-              color="primary"
-              @click="create_item"
+            <v-dialog
+              v-model="beforeBuyDialog"
+              width="500"
             >
-              Aceptar y culminar
-            </v-btn>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  color="#cf66a5"
+                  dense
+                  class="white--text"
+                  large
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  Confirmar creación
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title class="text-h5 grey lighten-2">
+                  Confirmación de creación
+                </v-card-title>
+                <v-card-text>
+                  <p>Storage fee: 0.015Ⓝ</p>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-btn
+                    color="secondary"
+                    text
+                    @click="beforeBuyDialog = false"
+                  >
+                    Cancelar
+                  </v-btn>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    color="primary"
+                    text
+                    @click="beforeBuyDialog = false,create_item"
+                  >
+                    Confirmar creación
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-stepper-content>
         </v-stepper>
       </v-card-text>
@@ -327,6 +374,13 @@ export default {
       copy: null,
       price: null,
       url: null,
+      beforeBuyDialog: false,
+      validaciones: {
+        form1: false,
+        form2: false,
+        form3: false,
+        form4: false
+      },
       genres: [],
       categorias: [],
       regalias: [],
@@ -380,7 +434,7 @@ export default {
     },
     async getCategorias () {
       this.categorias = []
-      const CONTRACT_NAME = 'book4.bookshop.testnet'
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
@@ -398,7 +452,7 @@ export default {
       }
     },
     async create_item () {
-      const CONTRACT_NAME = 'book4.bookshop.testnet'
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
       const direccionIpfs = '.ipfs.dweb.link'
       // connect to NEAR
       const near = await connect(
@@ -413,10 +467,11 @@ export default {
       const formData = new FormData()
       formData.append('cover', this.cover)
       formData.append('book', this.book)
-      const relagia = []
+      const relagia = {}
       this.regalias.forEach((element) => {
-        relagia[element.wallet] = element.percent
+        relagia[element.wallet] = element.percent * 100
       })
+      console.log(relagia)
       await this.$axios.$post('/api/uploader/web3storage', formData).then((data) => {
         contract.nft_series(
           {

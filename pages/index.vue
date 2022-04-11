@@ -341,6 +341,8 @@ export default {
   data () {
     return {
       categorias: [],
+      top_books: [],
+      top_authors: [],
       itemsCarousel: [
         {
           src1: 'home/libro2.jpg',
@@ -423,7 +425,7 @@ export default {
   methods: {
     async fetch_data () {
       this.categorias = []
-      const CONTRACT_NAME = 'book4.bookshop.testnet'
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
@@ -431,13 +433,19 @@ export default {
       // create wallet connection
       const wallet = new WalletConnection(near)
       const contract = new Contract(wallet.account(), CONTRACT_NAME, {
-        viewMethods: ['get_category'],
+        viewMethods: ['get_category', 'get_top_series_sales', 'get_top_author_sales'],
         sender: wallet.account()
       })
       await contract.get_category().then((response) => {
         response.forEach((element) => {
           this.categorias.push({ id: element.id, nombre: element.name, imagen: element.img })
         })
+      })
+      await contract.get_top_series_sales().then((response) => {
+        this.top_books = response
+      })
+      await contract.get_top_authors().then((response) => {
+        this.top_authors = response
       })
     }
   }

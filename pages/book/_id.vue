@@ -37,11 +37,52 @@
               Copias
             </p>
             <p class="text-subtitle-1 font-weight-thin">
-              {{ dataNftToken.metadata.copies }} Disponibles
+              {{ dataNftToken.metadata.copies - dataNftToken.copy }} Disponible(s)
             </p>
-            <v-btn color="#7474B3" class="white--text" dense large @click="buy_nft()">
-              Comprar
-            </v-btn>
+            <v-dialog
+              v-model="beforeBuyDialog"
+              width="500"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  color="#cf66a5"
+                  dense
+                  class="white--text"
+                  large
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  Comprar
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title class="text-h5 grey lighten-2">
+                  Confirmar compra
+                </v-card-title>
+                <v-card-text>
+                  <p>Total: {{formatPrice(dataNftToken.price)}}Ⓝ</p>
+                  <p>Storage fee: 0.015Ⓝ</p>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-btn
+                    color="secondary"
+                    text
+                    @click="beforeBuyDialog = false"
+                  >
+                    Cancelar
+                  </v-btn>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    color="primary"
+                    text
+                    @click="beforeBuyDialog = false, buy_nft()"
+                  >
+                    Comprar
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </div>
         </v-col>
       </v-row>
@@ -78,7 +119,8 @@ export default {
     return {
       serieId: this.$route.params.id,
       dataNftToken: null,
-      author: null
+      author: null,
+      beforeBuyDialog: false
     }
   },
   mounted () {
@@ -86,10 +128,13 @@ export default {
   },
   methods: {
     formatPrice (price) {
+      return Number(utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false })))
+    },
+    TokenPrice (price) {
       return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))
     },
     async nftTokensContract () {
-      const CONTRACT_NAME = 'book4.bookshop.testnet'
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
       )
@@ -106,7 +151,7 @@ export default {
       })
     },
     async getAuthor (author) {
-      const CONTRACT_NAME = 'book4.bookshop.testnet'
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
       )
@@ -122,7 +167,7 @@ export default {
       })
     },
     async buy_nft () {
-      const CONTRACT_NAME = 'book4.bookshop.testnet'
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
@@ -137,9 +182,7 @@ export default {
         token_series_id: this.serieId,
         receiver_id: wallet.getAccountId()
       }, '300000000000000', // attached GAS (optional)
-      this.dataNftToken.price.toLocaleString('fullwide', { useGrouping: false })).then((response) => {
-        // console.log(response)
-      })
+      utils.format.parseNearAmount((this.formatPrice(this.dataNftToken.price) + 0.015).toString()))
     }
   }
 }

@@ -50,6 +50,7 @@
               </v-icon>
             </v-btn>
             <v-btn
+              v-if="profilex"
               to="/book/new"
               class="mx-2"
               icon
@@ -115,7 +116,7 @@
 <script>
 import * as nearAPI from 'near-api-js'
 import { CONFIG } from '~/services/api'
-const { connect, keyStores, WalletConnection } = nearAPI
+const { connect, keyStores, WalletConnection, Contract } = nearAPI
 export default {
   name: 'DefaultLayout',
   data () {
@@ -125,6 +126,7 @@ export default {
       fixed: false,
       sesion: null,
       accountId: null,
+      profilex: false,
       items: [
         {
           icon: 'mdi-apps',
@@ -155,7 +157,7 @@ export default {
       // create wallet connection
       const wallet = new WalletConnection(near)
       wallet.requestSignIn(
-        'book4.bookshop.testnet'
+        'book.bookshop2.testnet'
       )
     },
     async isSigned () {
@@ -164,6 +166,19 @@ export default {
       // create wallet connection
       const wallet = new WalletConnection(near)
       if (wallet.isSignedIn()) {
+        const CONTRACT_NAME = 'book.bookshop2.testnet'
+        const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+          viewMethods: ['get_profile'],
+          sender: wallet.account()
+        })
+        await contract.get_profile({
+          user_id: wallet.getAccountId()
+        }).then((res) => {
+          this.profilex = true
+        }).catch((err) => {
+          console.log(err)
+          this.profilex = false
+        })
         this.sesion = true
         // returns account Id as string
         const walletAccountId = wallet.getAccountId()
