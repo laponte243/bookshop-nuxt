@@ -1,52 +1,10 @@
 <template>
   <v-row>
-    <v-col
-      cols="12"
-      sm="12"
-    >
-      <v-slide-group
-        v-model="model"
-        class="pa-4"
-        center-active
-        active-class="success"
-        show-arrows
-      >
-        <v-slide-item
-          v-for="(item,i) in top_books"
-          :key="i"
-        >
-          <v-card
-            :color="active ? 'primary' : 'grey lighten-1'"
-            class="ma-4"
-            height="200"
-            width="100"
-            @click="toggle"
-          >
-            <v-row
-              class="fill-height"
-              align="center"
-              justify="center"
-            >
-              <v-card
-                class="hover"
-                align="center"
-              >
-                <v-img
-                  class="white--text align-end imgOffers"
-                  :src="item.metadata.media"
-                />
-              </v-card>
-            </v-row>
-          </v-card>
-        </v-slide-item>
-      </v-slide-group>
-    </v-col>
     <v-col class="text-center">
-      <v-carousel
-        class="carousel"
-        hide-delimiter-background
-        delimiter-icon="mdi-minus"
-        height="90vh"
+      <v-sheet
+        class="pt-8 sheet"
+        elevation="8"
+        rounded="2"
       >
         <v-row
           class="mt-7"
@@ -57,59 +15,59 @@
             Libros en tendencia
           </h1>
         </v-row>
-        <v-carousel-item
-          v-for="(itemC,i) in itemsCarousel"
-          :key="i"
-          class="pt-7"
+        <v-slide-group
+          v-model="model"
+          class="ul1 container"
+          show-arrows
         >
-          <v-row
-            align="center"
-            justify="center"
+          <v-slide-item
+            v-for="(item,i) in top_books"
+            :key="i"
+            class="ma-4"
           >
-            <v-col />
-            <v-col
-              align-self="center"
+            <v-card
+              align="center"
+              width="265px"
+              elevation="3"
             >
-              <div class="text-h3">
-                <a>
-                  <v-img
-                    class="hover imgCarousel"
-                    :src="require(`~/assets/img/${itemC.src1}`)"
-                  />
-                </a>
-              </div>
-            </v-col>
-            <v-col
-              class="d-none d-sm-flex"
-              align-self="center"
+              <v-img
+                class="white--text align-end imgOffers"
+                :src="item.metadata.media"
+              />
+              <v-card-text
+                class="text--primary text-left"
+              >
+                <div>
+                  <div style="font-size:16px; color: #9575CD">
+                    {{ item.metadata.title }}
+                  </div>
+                </div>
+                <div>
+                  {{ item.creator_id }}
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-slide-item>
+        </v-slide-group>
+
+        <v-expand-transition>
+          <v-sheet
+            v-if="model != null"
+            height="200"
+            tile
+          >
+            <v-row
+              class="fill-height"
+              align="center"
+              justify="center"
             >
-              <div class="text-h3">
-                <a href="/product">
-                  <v-img
-                    class="hover imgCarousel"
-                    :src="require(`~/assets/img/${itemC.src2}`)"
-                  />
-                </a>
-              </div>
-            </v-col>
-            <v-col
-              class="d-none d-md-flex"
-              align-self="center"
-            >
-              <div class="text-h3">
-                <a href="/product">
-                  <v-img
-                    class="hover imgCarousel"
-                    :src="require(`~/assets/img/${itemC.src3}`)"
-                  />
-                </a>
-              </div>
-            </v-col>
-            <v-col />
-          </v-row>
-        </v-carousel-item>
-      </v-carousel>
-      <v-container>
+              <h3 class="text-h6">
+                Selected {{ model }}
+              </h3>
+            </v-row>
+          </v-sheet>
+        </v-expand-transition>
+      </v-sheet>
         <v-col :cols="12">
           <v-card-text
             tile
@@ -130,7 +88,7 @@
                     :src="item.imagen"
                     class="white--text align-center"
                     gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                    height="300px"
+                    height="150px"
                   >
                     <h1 class="text-center font-size">
                       {{ item.nombre }}
@@ -153,18 +111,6 @@
             </div>
           </v-card-text>
         </v-col>
-        <div class="text-center mt-2">
-          <v-btn
-            class="black--text text-caption"
-            text
-          >
-            Explorar
-            <v-icon class="black--text text-caption">
-              mdi-arrow-right
-            </v-icon>
-          </v-btn>
-        </div>
-      </v-container>
       <v-container>
         <v-row no-gutters>
           <v-col :cols="12">
@@ -174,92 +120,9 @@
               outlined
             >
               <v-card-title class="subheading">
-                Escritores Destacados
+                La crème de la crème
               </v-card-title>
               <v-divider />
-              <v-carousel
-                hide-delimiter-background
-                hide-delimiters
-                show-arrows-on-hover
-                height="230"
-                class="mt-2"
-              >
-                <v-carousel-item
-                  v-for="(itemsW, i) in writes"
-                  :key="i"
-                >
-                  <v-row align-content="center">
-                    <v-col
-                      class="col-12 col-md-3 col-sm-6 col-xs-6 text-center"
-                      align-self="center"
-                    >
-                      <v-card class="hover2">
-                        <v-img
-                          :src="require('~/assets/img/' + itemsW.src1)"
-                          class="white--text align-end"
-                          gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                          height="200px"
-                        >
-                          <v-card-title>
-                            {{ itemsW.name1 }}
-                          </v-card-title>
-                        </v-img>
-                      </v-card>
-                    </v-col>
-                    <v-col
-                      class="col-12 col-md-3 col-sm-6 col-xs-6 text-center"
-                      align-self="center"
-                    >
-                      <v-card class="hover2">
-                        <v-img
-                          :src="require('~/assets/img/' + itemsW.src2)"
-                          class="white--text align-end"
-                          gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                          height="200px"
-                        >
-                          <v-card-title>
-                            {{ itemsW.name2 }}
-                          </v-card-title>
-                        </v-img>
-                      </v-card>
-                    </v-col>
-                    <v-col
-                      class="col-12 col-md-3 col-sm-6 col-xs-6 text-center"
-                      align-self="center"
-                    >
-                      <v-card class="hover2">
-                        <v-img
-                          :src="require('~/assets/img/' + itemsW.src3)"
-                          class="white--text align-end"
-                          gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                          height="200px"
-                        >
-                          <v-card-title>
-                            {{ itemsW.name3 }}
-                          </v-card-title>
-                        </v-img>
-                      </v-card>
-                    </v-col>
-                    <v-col
-                      class="col-12 col-md-3 col-sm-6 col-xs-6 text-center"
-                      align-self="center"
-                    >
-                      <v-card class="hover2">
-                        <v-img
-                          :src="require('~/assets/img/' + itemsW.src4)"
-                          class="white--text align-end"
-                          gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                          height="200px"
-                        >
-                          <v-card-title>
-                            {{ itemsW.name4 }}
-                          </v-card-title>
-                        </v-img>
-                      </v-card>
-                    </v-col>
-                  </v-row>
-                </v-carousel-item>
-              </v-carousel>
             </v-card-text>
           </v-col>
         </v-row>
@@ -503,7 +366,7 @@ export default {
     position: absolute;
     width: 100%;
   } */
-  .carousel {
+  .sheet {
     background-image: url("~assets/img/home/fondoCarousel.png");
     background-size: 101% 100%;
   }
