@@ -345,7 +345,7 @@
                   <v-btn
                     color="primary"
                     text
-                    @click="beforeBuyDialog = false,create_item"
+                    @click="beforeBuyDialog = false, create_item()"
                   >
                     Confirmar creación
                   </v-btn>
@@ -471,7 +471,6 @@ export default {
       this.regalias.forEach((element) => {
         relagia[element.wallet] = element.percent * 100
       })
-      console.log(relagia)
       await this.$axios.$post('/api/uploader/web3storage', formData).then((data) => {
         contract.nft_series(
           {

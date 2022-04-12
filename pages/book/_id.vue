@@ -140,14 +140,14 @@ export default {
       )
       const wallet = new WalletConnection(near)
       const contract = new Contract(wallet.account(), CONTRACT_NAME, {
-        viewMethods: ['get_market_single'],
+        viewMethods: ['get_market'],
         sender: wallet.account()
       })
-      await contract.get_market_single({
-        token_series_id: this.serieId
+      await contract.get_market({
+        token: this.serieId
       }).then((response) => {
-        this.dataNftToken = response
-        this.getAuthor(response.creator_id)
+        this.dataNftToken = response[0]
+        this.getAuthor(response[0].creator_id)
       })
     },
     async getAuthor (author) {

@@ -60,28 +60,85 @@
           :key="i"
           class="col-xs-6 col-sm-4 col-md-3 col text-center"
         >
-          <router-link :to="'/book/' + item.token_id" class="text-decoration-none">
-            <v-card
-              class="hover"
-              align="center"
+          <v-card
+            class="hover"
+            align="center"
+          >
+            <v-img
+              class="white--text align-end imgOffers"
+              :src="item.metadata.media"
             >
-              <v-img
-                class="white--text align-end imgOffers"
-                :src="item.metadata.media"
+            </v-img>
+            <v-card-text class="text--primary text-left">
+              <div>
+                <div style="font-size:16px; color: #9575CD">
+                  {{ item.metadata.title }}
+                </div>
+              </div>
+              <div>
+                {{ item.creator_id }}
+              </div>
+            </v-card-text>
+            <v-card-actions>
+              <v-dialog
+                v-model="putOnSaleDialog"
+                width="500"
               >
-              </v-img>
-              <v-card-text class="text--primary text-left">
-                <div>
-                  <div style="font-size:16px; color: #9575CD">
-                    {{ item.metadata.title }}
-                  </div>
-                </div>
-                <div>
-                  {{ item.creator_id }}
-                </div>
-              </v-card-text>
-            </v-card>
-          </router-link>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    color="#cf66a5"
+                    dense
+                    class="white--text"
+                    large
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    Vender
+                  </v-btn>
+                </template>
+                <v-card>
+                  <v-card-title class="text-h5 grey lighten-2">
+                    Confirmar puesta en marketplace
+                  </v-card-title>
+                  <v-card-text>
+                    <p>Storage fee: 0.015Ⓝ</p>
+                    <v-text-field
+                      v-model="price"
+                      :rules="priceRule"
+                      label="Precio en Ⓝ"
+                      append-icon="mdi-wallet"
+                      outlined
+                      number
+                    />
+                  </v-card-text>
+                  <v-divider></v-divider>
+                  <v-card-actions>
+                    <v-btn
+                      color="secondary"
+                      text
+                      @click="putOnSaleDialog = false"
+                    >
+                      Cancelar
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="primary"
+                      text
+                      @click="putOnSaleDialog = false, tokenForSale = item.token_id, set_price()"
+                    >
+                      Confirmar creación
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="secondary"
+              >
+                Escribir review
+              </v-btn>
+            </v-card-actions>
+          </v-card>
         </div>
       </v-row>
     </v-container>
@@ -104,7 +161,13 @@ export default {
       autores: [],
       autor: null,
       categoria: null,
-      library: []
+      library: [],
+      putOnSaleDialog: false,
+      price: null,
+      tokenForSale: null,
+      priceRule: [
+        value => (!isNaN(parseFloat(value)) && value >= 0 && value <= 999999999) || 'precio no valido'
+      ]
     }
   },
   mounted () {
@@ -155,6 +218,30 @@ export default {
       await contract.get_author_market().then((response) => {
         this.autores = response
       })
+    },
+    async set_price () {
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
+      // connect to NEAR
+      const near = await connect(CONFIG(new keyStores.BrowserLocalStorageKeyStore()))
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        changeMethods: ['put_nft_series_price'],
+        sender: wallet.account()
+      })
+      if (wallet.isSignedIn()) {
+        await contract.put_nft_series_price({
+          token_series_id: this.tokenForSale,
+          price: utils.format.parseNearAmount(this.price)
+        },
+        '300000000000000',
+        '1'
+        ).then((res) => {
+          this.price = null
+          this.tokenForSale = null
+          this.nftTokensContract()
+        })
+      }
     }
   }
 }

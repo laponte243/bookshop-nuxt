@@ -1,5 +1,46 @@
 <template>
   <v-row>
+    <v-col
+      cols="12"
+      sm="12"
+    >
+      <v-slide-group
+        v-model="model"
+        class="pa-4"
+        center-active
+        active-class="success"
+        show-arrows
+      >
+        <v-slide-item
+          v-for="(item,i) in top_books"
+          :key="i"
+        >
+          <v-card
+            :color="active ? 'primary' : 'grey lighten-1'"
+            class="ma-4"
+            height="200"
+            width="100"
+            @click="toggle"
+          >
+            <v-row
+              class="fill-height"
+              align="center"
+              justify="center"
+            >
+              <v-card
+                class="hover"
+                align="center"
+              >
+                <v-img
+                  class="white--text align-end imgOffers"
+                  :src="item.metadata.media"
+                />
+              </v-card>
+            </v-row>
+          </v-card>
+        </v-slide-item>
+      </v-slide-group>
+    </v-col>
     <v-col class="text-center">
       <v-carousel
         class="carousel"
@@ -343,6 +384,8 @@ export default {
       categorias: [],
       top_books: [],
       top_authors: [],
+      columns: 3,
+      model: null,
       itemsCarousel: [
         {
           src1: 'home/libro2.jpg',
@@ -444,7 +487,7 @@ export default {
       await contract.get_top_series_sales().then((response) => {
         this.top_books = response
       })
-      await contract.get_top_authors().then((response) => {
+      await contract.get_top_author_sales().then((response) => {
         this.top_authors = response
       })
     }
