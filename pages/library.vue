@@ -87,9 +87,7 @@
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     color="#cf66a5"
-                    dense
                     class="white--text"
-                    large
                     v-bind="attrs"
                     v-on="on"
                   >
@@ -126,17 +124,64 @@
                       text
                       @click="putOnSaleDialog = false, tokenForSale = item.token_id, set_price()"
                     >
-                      Confirmar creación
+                      Confirmar venta
                     </v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
               <v-spacer></v-spacer>
-              <v-btn
-                color="secondary"
+              <v-dialog
+                v-model="putReviewDialog"
+                width="500"
               >
-                Escribir review
-              </v-btn>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    color="secondary"
+                    class="white--text"
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    Review
+                  </v-btn>
+                </template>
+                <v-card>
+                  <v-card-title class="text-h5 grey lighten-2">
+                    Queremos saber tu opinión!
+                  </v-card-title>
+                  <v-card-text>
+                    <v-rating
+                      v-model="critics"
+                      background-color="warning lighten-3"
+                      color="warning"
+                      dense
+                    />
+                    <v-textarea
+                      v-model="review"
+                      label="Tu opinión"
+                      outlined
+                      rows="4"
+                    />
+                  </v-card-text>
+                  <v-divider></v-divider>
+                  <v-card-actions>
+                    <v-btn
+                      color="secondary"
+                      text
+                      @click="putReviewDialog = false"
+                    >
+                      Cancelar
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="primary"
+                      text
+                      @click="putReviewDialog = false, tokenForSale = item.token_id, set_review()"
+                    >
+                      Guinda tu review
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
             </v-card-actions>
           </v-card>
         </div>
@@ -162,7 +207,10 @@ export default {
       autor: null,
       categoria: null,
       library: [],
+      critics: null,
+      review: null,
       putOnSaleDialog: false,
+      putReviewDialog: false,
       price: null,
       tokenForSale: null,
       priceRule: [
@@ -238,6 +286,32 @@ export default {
         '1'
         ).then((res) => {
           this.price = null
+          this.tokenForSale = null
+          this.nftTokensContract()
+        })
+      }
+    },
+    async set_review () {
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
+      // connect to NEAR
+      const near = await connect(CONFIG(new keyStores.BrowserLocalStorageKeyStore()))
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+        changeMethods: ['set_review'],
+        sender: wallet.account()
+      })
+      if (wallet.isSignedIn()) {
+        contract.set_review({
+          token_id: this.tokenForSale,
+          review: this.review,
+          critics: this.critics
+        },
+        '300000000000000',
+        '1'
+        ).then((res) => {
+          this.review = null
+          this.putReviewDialog = null
           this.tokenForSale = null
           this.nftTokensContract()
         })

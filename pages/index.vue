@@ -123,6 +123,7 @@
                 La crème de la crème
               </v-card-title>
               <v-divider />
+              <highchart :options="chartOptions" />
             </v-card-text>
           </v-col>
         </v-row>
@@ -177,17 +178,6 @@
                           {{ itemsO.copy }}
                         </div>
                       </v-card-text>
-
-                      <div class="text-right">
-                        <v-btn
-                          href="/shop"
-                          class="ma-2"
-                          outlined
-                          color="info"
-                        >
-                          Explorar
-                        </v-btn>
-                      </div>
                     </v-card>
                   </v-hover>
                 </div>
@@ -249,6 +239,33 @@ export default {
       top_authors: [],
       columns: 3,
       model: null,
+      lacreme_authors: [],
+      lacreme_sales: [],
+      chartOptions: {
+        chart: {
+          renderTo: 'container',
+          type: 'bar'
+        },
+        title: {
+          text: ''
+        },
+        legend: {
+          enabled: false
+        },
+        colors: ['#8C30F5'],
+        xAxis: {
+          categories: [],
+          lineWidth: 0,
+          minorGridLineWidth: 0,
+          lineColor: 'transparent',
+          title: {
+            text: null
+          }
+        },
+        series: [{
+          data: []
+        }]
+      },
       itemsCarousel: [
         {
           src1: 'home/libro2.jpg',
@@ -352,6 +369,12 @@ export default {
       })
       await contract.get_top_author_sales().then((response) => {
         this.top_authors = response
+        response.forEach((element) => {
+          this.lacreme_authors.push(element.author_id)
+          this.lacreme_sales.push(element.sales)
+        })
+        this.chartOptions.xAxis.categories = this.lacreme_authors
+        this.chartOptions.series[0].data = this.lacreme_sales
       })
     }
   }

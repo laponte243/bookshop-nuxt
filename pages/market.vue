@@ -73,7 +73,7 @@
               <v-card-text class="text--primary text-left">
                 <div>
                   <div style="font-size:16px; color: #9575CD">
-                    {{ item.metadata.title }}
+                    {{ item.metadata.title }} #{{ item.token_series_id }}
                   </div>
                 </div>
                 <div>
@@ -105,36 +105,6 @@ export default {
   data () {
     return {
       img: true,
-      offers: [
-        {
-          img: 'home/libro8.jpg',
-          nombre: 'Smart',
-          Author: 'Kim Slater',
-          price: '10 NEAR',
-          copy: '10 Copias'
-        },
-        {
-          img: 'home/libro9.jpg',
-          nombre: 'Dracula',
-          Author: 'Bram Stoker',
-          price: '15 NEAR',
-          copy: '10 Copias'
-        },
-        {
-          img: 'home/libro1.png',
-          nombre: 'El camino de la miseria',
-          Author: 'Lauren Grant',
-          price: '15 NEAR',
-          copy: '10 Copias'
-        },
-        {
-          img: 'home/libro2.jpg',
-          nombre: 'The Arrivals',
-          Author: 'Kim Slater',
-          price: '10 NEAR',
-          copy: '10 Copias'
-        }
-      ],
       dataNftTokens: [],
       categorias: [],
       autores: [],

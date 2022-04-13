@@ -40,6 +40,7 @@
               </v-icon>
             </v-btn>
             <v-btn
+              v-if="profilex"
               to="/library"
               class="mx-2"
               icon
