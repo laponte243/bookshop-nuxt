@@ -25,28 +25,30 @@
             :key="i"
             class="ma-4"
           >
-            <v-card
-              align="center"
-              width="265px"
-              elevation="3"
-            >
-              <v-img
-                class="white--text align-end imgOffers"
-                :src="item.metadata.media"
-              />
-              <v-card-text
-                class="text--primary text-left"
+            <router-link :to="'/book/' + item.token_serie_id" class="text-decoration-none">
+              <v-card
+                align="center"
+                width="265px"
+                elevation="3"
               >
-                <div>
-                  <div style="font-size:16px; color: #9575CD">
-                    {{ item.metadata.title }}
+                <v-img
+                  class="white--text align-end imgOffers"
+                  :src="item.metadata.media"
+                />
+                <v-card-text
+                  class="text--primary text-left"
+                >
+                  <div>
+                    <div style="font-size:16px; color: #9575CD">
+                      {{ item.metadata.title }}
+                    </div>
                   </div>
-                </div>
-                <div>
-                  {{ item.creator_id }}
-                </div>
-              </v-card-text>
-            </v-card>
+                  <div>
+                    {{ item.creator_id }}
+                  </div>
+                </v-card-text>
+              </v-card>
+            </router-link>
           </v-slide-item>
         </v-slide-group>
 
@@ -68,21 +70,22 @@
           </v-sheet>
         </v-expand-transition>
       </v-sheet>
-        <v-col :cols="12">
-          <v-card-text
-            tile
-            outlined
-          >
-            <v-card-title class="subheading ">
-              Generos
-            </v-card-title>
-            <v-divider />
-            <div class="row d-none d-sm-flex pt-1">
-              <div
-                v-for="(item,i) in categorias"
-                :key="i"
-                class="col-md-4 col-sm-4 col-xs-12"
-              >
+      <v-col :cols="12">
+        <v-card-text
+          tile
+          outlined
+        >
+          <v-card-title class="subheading ">
+            Generos
+          </v-card-title>
+          <v-divider />
+          <div class="row d-none d-sm-flex pt-1">
+            <div
+              v-for="(item,i) in categorias"
+              :key="i"
+              class="col-md-4 col-sm-4 col-xs-12"
+            >
+              <router-link :to="{ name: 'market', params: { category: item.id }}">
                 <v-card outlined>
                   <v-img
                     :src="item.imagen"
@@ -96,7 +99,6 @@
                     <div class="text-center mt-2">
                       <v-btn
                         class="white--text text-caption"
-                        href="#"
                         text
                       >
                         Explorar
@@ -107,10 +109,11 @@
                     </div>
                   </v-img>
                 </v-card>
-              </div>
+              </router-link>
             </div>
-          </v-card-text>
-        </v-col>
+          </div>
+        </v-card-text>
+      </v-col>
       <v-container>
         <v-row no-gutters>
           <v-col :cols="12">
@@ -128,7 +131,7 @@
           </v-col>
         </v-row>
       </v-container>
-      <v-container>
+      <!-- <v-container>
         <v-row no-gutters>
           <v-col :cols="12">
             <v-card-text
@@ -185,7 +188,7 @@
             </v-card-text>
           </v-col>
         </v-row>
-      </v-container>
+      </v-container>-->
       <v-card
         color="#6868AC"
         class="pt-0 pb-0 mt-0 mb-0 m"
@@ -197,17 +200,37 @@
               align-self="center"
             >
               <h1 class="white--text">
-                Pública tu Libro
+                Quieres formar parte de la familia?
               </h1>
               <p class="white--text">
-                Registrate como escritor y publica tu libro
+                Completa tu perfil y publica tu libro
               </p>
               <v-btn
+                v-if="!sesion"
                 color="#8C30F5"
                 class="white--text"
                 large
+                @click="signIn"
               >
                 Inicia sesion con Near
+              </v-btn>
+               <v-btn
+                v-if="sesion && profilex"
+                color="#8C30F5"
+                class="white--text"
+                large
+                to="/book/new"
+              >
+                Publica tu libro!
+              </v-btn>
+              <v-btn
+                v-if="sesion && !profilex"
+                color="#8C30F5"
+                class="white--text"
+                large
+                to="/user-profile"
+              >
+                Completa tu perfil
               </v-btn>
             </v-col>
             <v-col
@@ -239,6 +262,8 @@ export default {
       top_authors: [],
       columns: 3,
       model: null,
+      sesion: false,
+      profilex: false,
       lacreme_authors: [],
       lacreme_sales: [],
       chartOptions: {
@@ -344,8 +369,18 @@ export default {
   },
   mounted () {
     this.fetch_data()
+    this.isSigned()
   },
   methods: {
+    async signIn () {
+      // connect to NEAR
+      const near = await connect(CONFIG(new keyStores.BrowserLocalStorageKeyStore()))
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      wallet.requestSignIn(
+        'book.bookshop2.testnet'
+      )
+    },
     async fetch_data () {
       this.categorias = []
       const CONTRACT_NAME = 'book.bookshop2.testnet'
@@ -376,6 +411,31 @@ export default {
         this.chartOptions.xAxis.categories = this.lacreme_authors
         this.chartOptions.series[0].data = this.lacreme_sales
       })
+    },
+    async isSigned () {
+      // connect to NEAR
+      const near = await connect(CONFIG(new keyStores.BrowserLocalStorageKeyStore()))
+      // create wallet connection
+      const wallet = new WalletConnection(near)
+      if (wallet.isSignedIn()) {
+        const CONTRACT_NAME = 'book.bookshop2.testnet'
+        const contract = new Contract(wallet.account(), CONTRACT_NAME, {
+          viewMethods: ['get_profile'],
+          sender: wallet.account()
+        })
+        await contract.get_profile({
+          user_id: wallet.getAccountId()
+        }).then((res) => {
+          this.profilex = true
+        }).catch((err) => {
+          console.log(err)
+          this.profilex = false
+        })
+        this.sesion = true
+        // returns account Id as string
+        const walletAccountId = wallet.getAccountId()
+        this.accountId = walletAccountId
+      }
     }
   }
 }

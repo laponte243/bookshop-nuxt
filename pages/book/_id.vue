@@ -14,8 +14,19 @@
         </v-col>
         <v-col class="col-md-8 col-sm-8 col-xs-12">
           <div class="pl-6">
-            <p class="text-h4 mb-0" style="color: #7474b3">
+            <p
+              v-if="isSerie"
+              class="text-h4 mb-0"
+              style="color: #7474b3"
+            >
               {{ dataNftToken.metadata.title }}
+            </p>
+             <p
+              v-if="!isSerie"
+              class="text-h4 mb-0"
+              style="color: #7474b3"
+            >
+              {{ dataNftToken.metadata.title }} #{{ serieId}}
             </p>
             <v-card-actions class="pa-0">
               <p class="text-h5 font-weight-light pt-3">
@@ -33,10 +44,16 @@
             <p class="text-h4 font-weight-thin">
               {{ dataNftToken.metadata.description }}
             </p>
-            <p class="text-h6">
+            <p
+              v-if="isSerie"
+              class="text-h6"
+            >
               Copias
             </p>
-            <p class="text-subtitle-1 font-weight-thin">
+            <p
+              v-if="isSerie"
+              class="text-subtitle-1 font-weight-thin"
+            >
               {{ dataNftToken.metadata.copies - dataNftToken.copy }} Disponible(s)
             </p>
             <v-dialog
@@ -120,15 +137,22 @@ export default {
       serieId: this.$route.params.id,
       dataNftToken: null,
       author: null,
-      beforeBuyDialog: false
+      beforeBuyDialog: false,
+      isSerie: true
     }
   },
   mounted () {
     this.nftTokensContract()
+    this.token_or_serie()
   },
   methods: {
     formatPrice (price) {
       return Number(utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false })))
+    },
+    token_or_serie () {
+      if (this.serieId.search(':') !== -1) {
+        this.isSerie = false
+      }
     },
     TokenPrice (price) {
       return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))

@@ -115,6 +115,9 @@ export default {
   mounted () {
     this.nftTokensContract()
     this.getCategorias()
+    if (this.$route.params.category) {
+      this.categoria = this.$route.params.category
+    }
   },
   methods: {
     viewProduct () {
