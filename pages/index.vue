@@ -2,8 +2,7 @@
   <v-row>
     <v-col class="text-center">
       <v-sheet
-        class="pt-8 sheet"
-        elevation="8"
+        class="pt-3 sheet"
         rounded="2"
       >
         <v-row
@@ -85,7 +84,7 @@
               :key="i"
               class="col-md-4 col-sm-4 col-xs-12"
             >
-              <router-link :to="{ name: 'market', params: { category: item.id }}">
+              <router-link :to="{ name: 'market', params: { category: item.id }}" style="text-decoration: none;">
                 <v-card outlined>
                   <v-img
                     :src="item.imagen"
@@ -123,7 +122,7 @@
               outlined
             >
               <v-card-title class="subheading">
-                La crème de la crème
+                Rankin
               </v-card-title>
               <v-divider />
               <highchart :options="chartOptions" />
@@ -214,7 +213,7 @@
               >
                 Inicia sesion con Near
               </v-btn>
-               <v-btn
+              <v-btn
                 v-if="sesion && profilex"
                 color="#8C30F5"
                 class="white--text"
@@ -291,50 +290,8 @@ export default {
           data: []
         }]
       },
-      itemsCarousel: [
-        {
-          src1: 'home/libro2.jpg',
-          src2: 'home/libro3.jpg',
-          src3: 'home/libro4.jpg'
-        },
-        {
-          src1: 'home/libro5.jpg',
-          src2: 'home/libro6.jpg',
-          src3: 'home/libro7.jpg'
-        },
-        {
-          src1: 'home/libro8.jpg',
-          src2: 'home/libro9.jpg',
-          src3: 'home/libro1.png'
-        },
-        {
-          src1: 'home/libro4.jpg',
-          src2: 'home/libro5.jpg',
-          src3: 'home/libro6.jpg'
-        }
-      ],
-      writes: [
-        {
-          src1: 'avatars/imagenAvatar1.png',
-          name1: 'Kim Slater',
-          src2: 'avatars/imagenAvatar2.png',
-          name2: 'Bran Stoker',
-          src3: 'avatars/imagenAvatar3.png',
-          name3: 'Lauren Grant',
-          src4: 'avatars/imagenAvatar4.png',
-          name4: 'Lucas LLoyd'
-        },
-        {
-          src1: 'avatars/imagenAvatar5.png',
-          name1: 'Alba Palacio',
-          src2: 'avatars/imagenAvatar6.png',
-          name2: 'Bill Hollen',
-          src3: 'avatars/imagenAvatar7.png',
-          name3: 'Victoria Aveyard',
-          src4: 'avatars/imagenAvatar8.png',
-          name4: 'Roberto Dubuc'
-        }
-      ],
+      itemsCarousel: [],
+      writes: [],
       offers: [
         {
           img: 'home/libro8.jpg',
