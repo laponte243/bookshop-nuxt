@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="error.statusCode === 404">
     <!-- Hero End -->
     <section class="sheet">
       <v-container>
