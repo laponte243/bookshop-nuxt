@@ -17,6 +17,7 @@
     "body-parser": "^1.19.2",
     "chart.js": "^3.7.1",
     "core-js": "^3.19.3",
+    "cors": "^2.8.5",
     "express": "^4.17.3",
     "highcharts": "^10.0.0",
     "ipfs-car": "^0.6.2",
