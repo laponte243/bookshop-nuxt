@@ -34,10 +34,11 @@
               </p>
               <v-spacer />
               <v-rating
-                v-model="rating"
+                v-model="promedio"
                 background-color="warning lighten-3"
                 color="warning"
                 dense
+                readonly
               />
               <span class="text-body-2font-weight-thin"> 25 REVIEWS</span>
             </v-card-actions>
@@ -105,21 +106,30 @@
       </v-row>
       <v-row class="row">
         <div class="col-sm-12 col-xs-12 col-md-12">
-          <v-tabs>
+          <v-tabs
+            v-if="dataNftToken"
+          >
             <v-tab>Reviews</v-tab>
             <v-tab-item>
-              <p class="pt-10 text-subtitle-1 font-weight-thin">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ultricies mi eget mauris pharetra et. Vel pretium lectus quam id
-                leo in vitae turpis massa. Orci dapibus ultrices in iaculis
-                nunc. At auctor urna nunc id cursus metus. Integer feugiat
-                scelerisque varius morbi enim nunc. Aliquam sem et tortor
-                consequat id porta nibh venenatis cras. Pellentesque pulvinar
-                pellentesque habitant morbi tristique senectus et netus.
-                Malesuada nunc vel risus commodo viverra maecenas. Neque
-                volutpat ac tincidunt vitae semper quis.
-              </p>
+              <v-list three-line>
+                <v-list-item
+                  v-for="(item, index) in dataNftToken.reviews"
+                  :key="index"
+                  >
+                  <v-list-item-content>
+                    <v-list-item-title v-html="item.user_id"></v-list-item-title>
+                    <v-list-item-subtitle v-html="item.review"></v-list-item-subtitle>
+                    <v-rating
+                      v-model="item.critics"
+                      background-color="warning lighten-3"
+                      color="warning"
+                      dense
+                      readonly
+                    />
+                  </v-list-item-content>
+                </v-list-item>
+                <v-divider />
+              </v-list>
             </v-tab-item>
           </v-tabs>
         </div>
@@ -138,7 +148,8 @@ export default {
       dataNftToken: null,
       author: null,
       beforeBuyDialog: false,
-      isSerie: true
+      isSerie: true,
+      promedio: 5
     }
   },
   mounted () {
@@ -172,7 +183,12 @@ export default {
       }).then((response) => {
         this.dataNftToken = response[0]
         this.getAuthor(response[0].creator_id)
+        this.calcularPromedio()
       })
+    },
+    calcularPromedio () {
+      const prom = this.dataNftToken.reviews.reduce((a, b) => a + b.critics, 0) / this.dataNftToken.reviews.length
+      this.promedio = prom.toFixed(0)
     },
     async getAuthor (author) {
       const CONTRACT_NAME = 'book.bookshop2.testnet'
