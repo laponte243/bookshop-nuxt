@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container class="pt-12 mt-12">
+    <v-container class="mt-12">
       <v-row
         v-if="dataNftToken"
       >
@@ -21,24 +21,33 @@
             >
               {{ dataNftToken.metadata.title }}
             </p>
-             <p
+            <p
               v-if="!isSerie"
               class="text-h4 mb-0"
               style="color: #7474b3"
             >
-              {{ dataNftToken.metadata.title }} #{{ serieId}}
+              {{ dataNftToken.metadata.title }} #{{ serieId }}
             </p>
             <v-card-actions class="pa-0">
               <p class="text-h5 font-weight-light pt-3">
                 {{ formatPrice(dataNftToken.price) }} Near
               </p>
               <v-spacer />
-              <v-rating
+              <!-- <v-rating
                 v-model="promedio"
                 background-color="warning lighten-3"
                 color="warning"
                 dense
                 readonly
+              /> -->
+              <v-rating
+                v-model="promedio"
+                background-color="warning lighten-3"
+                color="yellow darken-3"
+                empty-icon="$ratingFull"
+                half-increments
+                hover
+                large
               />
               <span class="text-body-2font-weight-thin"> 25 REVIEWS</span>
             </v-card-actions>
@@ -78,10 +87,10 @@
                   Confirmar compra
                 </v-card-title>
                 <v-card-text>
-                  <p>Total: {{formatPrice(dataNftToken.price)}}Ⓝ</p>
-                  <p>Storage fee: 0.015Ⓝ</p>
+                  <p>Total: {{ formatPrice(dataNftToken.price) }} Ⓝ</p>
+                  <p>Storage fee: 0.015 Ⓝ</p>
                 </v-card-text>
-                <v-divider></v-divider>
+                <v-divider />
                 <v-card-actions>
                   <v-btn
                     color="secondary"
@@ -90,7 +99,7 @@
                   >
                     Cancelar
                   </v-btn>
-                  <v-spacer></v-spacer>
+                  <v-spacer />
                   <v-btn
                     color="primary"
                     text
@@ -104,21 +113,37 @@
           </div>
         </v-col>
       </v-row>
-      <v-row class="row">
+      <v-row class="row mt-10">
         <div class="col-sm-12 col-xs-12 col-md-12">
           <v-tabs
             v-if="dataNftToken"
           >
+            <v-tab>Sobre el autor</v-tab>
+            <v-tab-item>
+              <v-list three-line>
+                <v-list-item>
+                  <v-list-item-content>
+                    <p>
+                      {{ author.name }} {{ author.last_name }}
+                    </p>
+                    <p>
+                      {{ author.bio }}
+                    </p>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-divider />
+              </v-list>
+            </v-tab-item>
             <v-tab>Reviews</v-tab>
             <v-tab-item>
               <v-list three-line>
                 <v-list-item
                   v-for="(item, index) in dataNftToken.reviews"
                   :key="index"
-                  >
+                >
                   <v-list-item-content>
-                    <v-list-item-title v-html="item.user_id"></v-list-item-title>
-                    <v-list-item-subtitle v-html="item.review"></v-list-item-subtitle>
+                    <v-list-item-title v-html="item.user_id" />
+                    <v-list-item-subtitle v-html="item.review" />
                     <v-rating
                       v-model="item.critics"
                       background-color="warning lighten-3"
@@ -146,7 +171,7 @@ export default {
     return {
       serieId: this.$route.params.id,
       dataNftToken: null,
-      author: null,
+      author: [],
       beforeBuyDialog: false,
       isSerie: true,
       promedio: 5
@@ -204,6 +229,7 @@ export default {
         user_id: author
       }).then((response) => {
         this.author = response
+        console.log(this.author)
       })
     },
     async buy_nft () {
