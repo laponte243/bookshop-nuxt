@@ -333,6 +333,8 @@ export default {
       }
     },
     async out_market () {
+      console.log(this.tokenForSale)
+      alert(this.tokenForSale)
       const CONTRACT_NAME = 'book.bookshop2.testnet'
       // connect to NEAR
       const near = await connect(CONFIG(new keyStores.BrowserLocalStorageKeyStore()))

@@ -68,8 +68,7 @@
               <v-img
                 class="white--text align-end imgOffers"
                 :src="item.metadata.media"
-              >
-              </v-img>
+              />
               <v-card-text class="text--primary text-left">
                 <div>
                   <div style="font-size:16px; color: #9575CD">

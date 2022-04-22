@@ -33,25 +33,17 @@
                 {{ formatPrice(dataNftToken.price) }} Near
               </p>
               <v-spacer />
-              <!-- <v-rating
-                v-model="promedio"
-                background-color="warning lighten-3"
-                color="warning"
-                dense
-                readonly
-              /> -->
               <v-rating
                 v-model="promedio"
                 background-color="warning lighten-3"
-                color="yellow darken-3"
-                empty-icon="$ratingFull"
+                color="warning"
                 half-increments
-                hover
-                large
+                dense
+                readonly
               />
-              <span class="text-body-2font-weight-thin"> 25 REVIEWS</span>
+              <span class="text-body-2font-weight-thin"> {{ promedio }} REVIEWS</span>
             </v-card-actions>
-            <p class="text-h4 font-weight-thin">
+            <p class="font-weight-thin">
               {{ dataNftToken.metadata.description }}
             </p>
             <p
@@ -174,7 +166,7 @@ export default {
       author: [],
       beforeBuyDialog: false,
       isSerie: true,
-      promedio: 5
+      promedio: null
     }
   },
   mounted () {
@@ -212,8 +204,10 @@ export default {
       })
     },
     calcularPromedio () {
+      // this.promedio = this.dataNftToken.reviews.reduce((a, b) => a + b.critics, 0) / this.dataNftToken.reviews.length
       const prom = this.dataNftToken.reviews.reduce((a, b) => a + b.critics, 0) / this.dataNftToken.reviews.length
-      this.promedio = prom.toFixed(0)
+      this.promedio = prom.toFixed(2)
+      console.log(this.promedio)
     },
     async getAuthor (author) {
       const CONTRACT_NAME = 'book.bookshop2.testnet'
@@ -229,7 +223,7 @@ export default {
         user_id: author
       }).then((response) => {
         this.author = response
-        console.log(this.author)
+        // console.log(this.author)
       })
     },
     async buy_nft () {
