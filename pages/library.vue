@@ -67,8 +67,7 @@
             <v-img
               class="white--text align-end imgOffers"
               :src="item.metadata.media"
-            >
-            </v-img>
+            />
             <v-card-text class="text--primary text-left">
               <div>
                 <div style="font-size:16px; color: #9575CD">
@@ -80,21 +79,26 @@
               </div>
             </v-card-text>
             <v-card-actions>
+              <v-btn
+                v-if="item.price <= 0"
+                color="primary"
+                class="white--text"
+                @click="show_dialog_sale(item.token_series_id)"
+              >
+                Vender
+              </v-btn>
+              <v-btn
+                v-else
+                color="#cf66a5"
+                class="white--text"
+                @click="show_dialog_out_sale(item.token_series_id)"
+              >
+                Retirar Venta
+              </v-btn>
               <v-dialog
-                v-if="item.price == 0"
                 v-model="putOnSaleDialog"
                 width="500"
               >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    color="#cf66a5"
-                    class="white--text"
-                    v-bind="attrs"
-                    v-on="on"
-                  >
-                    Vender
-                  </v-btn>
-                </template>
                 <v-card>
                   <v-card-title class="text-h5 grey lighten-2">
                     Confirmar puesta en marketplace
@@ -110,7 +114,7 @@
                       number
                     />
                   </v-card-text>
-                  <v-divider></v-divider>
+                  <v-divider />
                   <v-card-actions>
                     <v-btn
                       color="secondary"
@@ -119,37 +123,26 @@
                     >
                       Cancelar
                     </v-btn>
-                    <v-spacer></v-spacer>
+                    <v-spacer />
                     <v-btn
                       color="primary"
                       text
-                      @click="putOnSaleDialog = false, tokenForSale = item.token_id, set_price()"
+                      @click="putOnSaleDialog = false, set_price()"
                     >
                       Confirmar venta
                     </v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
-               <v-dialog
-                v-else
+              <v-dialog
                 v-model="putOutSaleDialog"
                 width="500"
               >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    color="#cf66a5"
-                    class="white--text"
-                    v-bind="attrs"
-                    v-on="on"
-                  >
-                    Retirar Venta
-                  </v-btn>
-                </template>
                 <v-card>
                   <v-card-title class="text-h5 grey lighten-2">
                     Confirmar sacar del marketplace
                   </v-card-title>
-                  <v-divider></v-divider>
+                  <v-divider />
                   <v-card-actions>
                     <v-btn
                       color="secondary"
@@ -158,23 +151,23 @@
                     >
                       Cancelar
                     </v-btn>
-                    <v-spacer></v-spacer>
+                    <v-spacer />
                     <v-btn
                       color="primary"
                       text
-                      @click="putOutSaleDialog = false, tokenForSale = item.token_series_id, out_market()"
+                      @click="putOutSaleDialog = false, out_market()"
                     >
                       Confirmar cancelar venta
                     </v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
-              <v-spacer></v-spacer>
+              <v-spacer />
               <v-dialog
                 v-model="putReviewDialog"
                 width="500"
               >
-                <template v-slot:activator="{ on, attrs }">
+                <template #activator="{ on, attrs }">
                   <v-btn
                     color="secondary"
                     class="white--text"
@@ -202,7 +195,7 @@
                       rows="4"
                     />
                   </v-card-text>
-                  <v-divider></v-divider>
+                  <v-divider />
                   <v-card-actions>
                     <v-btn
                       color="secondary"
@@ -211,11 +204,11 @@
                     >
                       Cancelar
                     </v-btn>
-                    <v-spacer></v-spacer>
+                    <v-spacer />
                     <v-btn
                       color="primary"
                       text
-                      @click="putReviewDialog = false, tokenForSale = item.token_id, set_review()"
+                      @click="putReviewDialog = false, tokenForSale = item.token_series_id, set_review()"
                     >
                       Guinda tu review
                     </v-btn>
@@ -264,6 +257,14 @@ export default {
     this.getCategorias()
   },
   methods: {
+    show_dialog_sale (tokenId) {
+      this.tokenForSale = tokenId
+      this.putOnSaleDialog = true
+    },
+    show_dialog_out_sale (tokenId) {
+      this.tokenForSale = tokenId
+      this.putOutSaleDialog = true
+    },
     viewProduct () {
       this.$router.push({ name: 'product' })
     },
@@ -333,8 +334,6 @@ export default {
       }
     },
     async out_market () {
-      console.log(this.tokenForSale)
-      alert(this.tokenForSale)
       const CONTRACT_NAME = 'book.bookshop2.testnet'
       // connect to NEAR
       const near = await connect(CONFIG(new keyStores.BrowserLocalStorageKeyStore()))
@@ -345,7 +344,6 @@ export default {
         sender: wallet.account()
       })
       if (wallet.isSignedIn()) {
-        console.log(this.tokenForSale)
         await contract.put_nft_series_price({
           token_series_id: this.tokenForSale,
           price: '0'
@@ -353,8 +351,6 @@ export default {
         '300000000000000',
         '1'
         ).then((res) => {
-          this.price = null
-          this.tokenForSale = null
           this.nftTokensContract()
         })
       }
