@@ -163,20 +163,17 @@
                 </v-card>
               </v-dialog>
               <v-spacer />
+              <v-btn
+                color="secondary"
+                class="white--text"
+                @click="show_dialog_review(item.token_series_id)"
+              >
+                Review
+              </v-btn>
               <v-dialog
                 v-model="putReviewDialog"
                 width="500"
               >
-                <template #activator="{ on, attrs }">
-                  <v-btn
-                    color="secondary"
-                    class="white--text"
-                    v-bind="attrs"
-                    v-on="on"
-                  >
-                    Review
-                  </v-btn>
-                </template>
                 <v-card>
                   <v-card-title class="text-h5 grey lighten-2">
                     Queremos saber tu opinión!
@@ -208,7 +205,7 @@
                     <v-btn
                       color="primary"
                       text
-                      @click="putReviewDialog = false, tokenForSale = item.token_series_id, set_review()"
+                      @click="putReviewDialog = false, set_review()"
                     >
                       Guinda tu review
                     </v-btn>
@@ -264,6 +261,10 @@ export default {
     show_dialog_out_sale (tokenId) {
       this.tokenForSale = tokenId
       this.putOutSaleDialog = true
+    },
+    show_dialog_review (tokenId) {
+      this.tokenForSale = tokenId
+      this.putReviewDialog = true
     },
     viewProduct () {
       this.$router.push({ name: 'product' })

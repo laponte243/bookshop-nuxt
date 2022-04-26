@@ -62,7 +62,7 @@
               v-model="beforeBuyDialog"
               width="500"
             >
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-btn
                   color="#cf66a5"
                   dense
@@ -134,8 +134,12 @@
                   :key="index"
                 >
                   <v-list-item-content>
-                    <v-list-item-title v-html="item.user_id" />
-                    <v-list-item-subtitle v-html="item.review" />
+                    <v-list-item-title>
+                      {{ item.user_id }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      {{ item.review }}
+                    </v-list-item-subtitle>
                     <v-rating
                       v-model="item.critics"
                       background-color="warning lighten-3"
@@ -204,10 +208,8 @@ export default {
       })
     },
     calcularPromedio () {
-      // this.promedio = this.dataNftToken.reviews.reduce((a, b) => a + b.critics, 0) / this.dataNftToken.reviews.length
       const prom = this.dataNftToken.reviews.reduce((a, b) => a + b.critics, 0) / this.dataNftToken.reviews.length
       this.promedio = prom.toFixed(2)
-      console.log(this.promedio)
     },
     async getAuthor (author) {
       const CONTRACT_NAME = 'book.bookshop2.testnet'
