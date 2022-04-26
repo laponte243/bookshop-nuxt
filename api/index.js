@@ -4,7 +4,9 @@ import cors from 'cors'
 // Create express instance
 const app = express()
 
-app.use(cors())
+app.use(cors({
+  origin: '*'
+}))
 // Require API routes
 import uploader from './routes/uploader'
 app.use(bodyParser.json())
