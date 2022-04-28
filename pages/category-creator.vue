@@ -191,7 +191,7 @@ export default {
       })
       const formData = new FormData()
       formData.append('imagen', this.item.imagen)
-      await this.$axios.$post('http://157.230.2.213:3124/uploader/categoria', formData).then((data) => {
+      await this.$axios.$post('https://157.230.2.213:3124/uploader/categoria', formData).then((data) => {
         contract.set_category({
           name: this.item.nombre,
           img: 'https://' + data.data + direccionIpfs + '/' + data.nombre
@@ -215,7 +215,7 @@ export default {
       })
       const formData = new FormData()
       formData.append('imagen', this.item.imagen)
-      await this.$axios.$post('http://157.230.2.213:3124/uploader/categoria', formData).then((data) => {
+      await this.$axios.$post('https://biterchecker.com:3124/uploader/categoria', formData).then((data) => {
         contract.put_category({
           category_id: this.item.id,
           name: this.item.nombre,
