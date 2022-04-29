@@ -2,7 +2,7 @@
 // const API_PROXY_PREFIX='/api'
 // const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.VUE_APP_API_BASE_URL : API_PROXY_PREFIX
 
-const NETWORK = process.env.NODE_ENV === 'development' ? 'testnet' : 'testnet'
+const NETWORK = 'mainnet'
 
 function CONFIG (keyStores) {
   switch (NETWORK) {

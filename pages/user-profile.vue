@@ -157,7 +157,7 @@ export default {
       return url.protocol === 'http:' || url.protocol === 'https:'
     },
     async setData () {
-      const CONTRACT_NAME = 'book.bookshop2.testnet'
+      const CONTRACT_NAME = 'nft.nearbookshop.near'
       // connect to NEAR
       const near = await connect(CONFIG(new keyStores.BrowserLocalStorageKeyStore()))
       // create wallet connection
@@ -179,7 +179,7 @@ export default {
       }
     },
     async setDataEdit () {
-      const CONTRACT_NAME = 'book.bookshop2.testnet'
+      const CONTRACT_NAME = 'nft.nearbookshop.near'
       // connect to NEAR
       const near = await connect(CONFIG(new keyStores.BrowserLocalStorageKeyStore()))
       // create wallet connection
@@ -200,7 +200,7 @@ export default {
       }
     },
     async getData () {
-      const CONTRACT_NAME = 'book.bookshop2.testnet'
+      const CONTRACT_NAME = 'nft.nearbookshop.near'
       // connect to NEAR
       const near = await connect(CONFIG(new keyStores.BrowserLocalStorageKeyStore()))
       // create wallet connection

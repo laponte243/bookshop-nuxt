@@ -126,7 +126,7 @@ export default {
       return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))
     },
     async nftTokensContract () {
-      const CONTRACT_NAME = 'book.bookshop2.testnet'
+      const CONTRACT_NAME = 'nft.nearbookshop.near'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
@@ -150,7 +150,7 @@ export default {
     },
     async getCategorias () {
       this.categorias = []
-      const CONTRACT_NAME = 'book.bookshop2.testnet'
+      const CONTRACT_NAME = 'nft.nearbookshop.near'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())

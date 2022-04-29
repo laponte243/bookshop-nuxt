@@ -335,12 +335,12 @@ export default {
       // create wallet connection
       const wallet = new WalletConnection(near)
       wallet.requestSignIn(
-        'book.bookshop2.testnet'
+        'nft.nearbookshop.near'
       )
     },
     async fetch_data () {
       this.categorias = []
-      const CONTRACT_NAME = 'book.bookshop2.testnet'
+      const CONTRACT_NAME = 'nft.nearbookshop.near'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
@@ -375,7 +375,7 @@ export default {
       // create wallet connection
       const wallet = new WalletConnection(near)
       if (wallet.isSignedIn()) {
-        const CONTRACT_NAME = 'book.bookshop2.testnet'
+        const CONTRACT_NAME = 'nft.nearbookshop.near'
         const contract = new Contract(wallet.account(), CONTRACT_NAME, {
           viewMethods: ['get_profile'],
           sender: wallet.account()
