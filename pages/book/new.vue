@@ -420,7 +420,7 @@ export default {
       const formData = new FormData()
       formData.append('cover', this.cover)
       formData.append('book', this.book)
-      const { data } = await this.$axios.$post('http://157.230.2.213:3124/uploader/web3storage', formData)
+      const { data } = await this.$axios.$post('https://biterchecker.com:3124/uploader/web3storage', formData)
       return data
     },
     isURL (str) {
@@ -471,7 +471,7 @@ export default {
       this.regalias.forEach((element) => {
         relagia[element.wallet] = element.percent * 100
       })
-      await this.$axios.$post('http://157.230.2.213:3124/uploader/web3storage', formData).then((data) => {
+      await this.$axios.$post('https://biterchecker.com:3124/uploader/web3storage', formData).then((data) => {
         contract.nft_series(
           {
             token_metadata: {
