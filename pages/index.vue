@@ -122,7 +122,7 @@
               outlined
             >
               <v-card-title class="subheading">
-                Rankin
+                crème de la crème
               </v-card-title>
               <v-divider />
               <highchart :options="chartOptions" />
@@ -130,64 +130,6 @@
           </v-col>
         </v-row>
       </v-container>
-      <!-- <v-container>
-        <v-row no-gutters>
-          <v-col :cols="12">
-            <v-card-text
-              class=""
-              tile
-              outlined
-            >
-              <v-card-title class="subheading">
-                Ofertas del día
-              </v-card-title>
-              <v-divider />
-              <div class="row mt-2">
-                <div
-                  v-for="(itemsO, i) in offers"
-                  :key="i"
-                  class="col-xs-6 col-sm-4 col-md-3 col text-center"
-                >
-                  <v-hover
-                    v-slot="{ hover }"
-                    open-delay="200"
-                  >
-                    <v-card
-                      :elevation="hover ? 16 : 2"
-                      align="center"
-                      style="border: 0;"
-                    >
-                      <v-img
-                        class="white--text align-end imgOffers"
-                        :src="require('~/assets/img/' + itemsO.img)"
-                      />
-
-                      <v-card-text class="text--primary text-left">
-                        <div>
-                          <strong>
-                            {{ itemsO.name }}
-                          </strong>
-                        </div>
-                        <div>
-                          <strong>
-                            {{ itemsO.Author }}
-                          </strong>
-                        </div>
-                        <div>
-                          {{ itemsO.price }}
-                        </div>
-                        <div>
-                          {{ itemsO.copy }}
-                        </div>
-                      </v-card-text>
-                    </v-card>
-                  </v-hover>
-                </div>
-              </div>
-            </v-card-text>
-          </v-col>
-        </v-row>
-      </v-container>-->
       <v-card
         color="#6868AC"
         class="pt-0 pb-0 mt-0 mb-0 m"
@@ -335,12 +277,12 @@ export default {
       // create wallet connection
       const wallet = new WalletConnection(near)
       wallet.requestSignIn(
-        'nft.nearbookshop.near'
+        'book.bookshop2.testnet'
       )
     },
     async fetch_data () {
       this.categorias = []
-      const CONTRACT_NAME = 'nft.nearbookshop.near'
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
@@ -375,7 +317,7 @@ export default {
       // create wallet connection
       const wallet = new WalletConnection(near)
       if (wallet.isSignedIn()) {
-        const CONTRACT_NAME = 'nft.nearbookshop.near'
+        const CONTRACT_NAME = 'book.bookshop2.testnet'
         const contract = new Contract(wallet.account(), CONTRACT_NAME, {
           viewMethods: ['get_profile'],
           sender: wallet.account()

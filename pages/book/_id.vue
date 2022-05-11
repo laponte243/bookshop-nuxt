@@ -176,6 +176,9 @@ export default {
   mounted () {
     this.nftTokensContract()
     this.token_or_serie()
+    if (this.$route.query.transactionHashes) {
+      this.$toast.success('Libro comprado correctamente')
+    }
   },
   methods: {
     formatPrice (price) {
@@ -190,7 +193,7 @@ export default {
       return utils.format.formatNearAmount(price.toLocaleString('fullwide', { useGrouping: false }))
     },
     async nftTokensContract () {
-      const CONTRACT_NAME = 'nft.nearbookshop.near'
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
       )
@@ -202,9 +205,13 @@ export default {
       await contract.get_market({
         token: this.serieId
       }).then((response) => {
-        this.dataNftToken = response[0]
-        this.getAuthor(response[0].creator_id)
-        this.calcularPromedio()
+        if (response[0]) {
+          this.dataNftToken = response[0]
+          this.getAuthor(response[0].creator_id)
+          this.calcularPromedio()
+        } else {
+          this.$router.push('./../market')
+        }
       })
     },
     calcularPromedio () {
@@ -212,7 +219,7 @@ export default {
       this.promedio = prom.toFixed(2)
     },
     async getAuthor (author) {
-      const CONTRACT_NAME = 'nft.nearbookshop.near'
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
       )
@@ -229,7 +236,7 @@ export default {
       })
     },
     async buy_nft () {
-      const CONTRACT_NAME = 'nft.nearbookshop.near'
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())

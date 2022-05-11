@@ -134,6 +134,7 @@ export default {
   },
   mounted () {
     this.fetch_data()
+    // this.$router.push('./')
   },
   methods: {
     Preview_image () {
@@ -159,7 +160,7 @@ export default {
     },
     async fetch_data () {
       this.data_table = []
-      const CONTRACT_NAME = 'nft.nearbookshop.near'
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
@@ -177,7 +178,7 @@ export default {
       })
     },
     async create_item (item) {
-      const CONTRACT_NAME = 'nft.nearbookshop.near'
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
       const direccionIpfs = '.ipfs.dweb.link'
       // connect to NEAR
       const near = await connect(
@@ -191,7 +192,7 @@ export default {
       })
       const formData = new FormData()
       formData.append('imagen', this.item.imagen)
-      await this.$axios.$post('https://biterchecker.com:3124/uploader/categoria', formData).then((data) => {
+      await this.$axios.$post('api/uploader/categoria', formData).then((data) => {
         contract.set_category({
           name: this.item.nombre,
           img: 'https://' + data.data + direccionIpfs + '/' + data.nombre
@@ -201,7 +202,7 @@ export default {
       })
     },
     async update_item (item) {
-      const CONTRACT_NAME = 'nft.nearbookshop.near'
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
       const direccionIpfs = '.ipfs.dweb.link'
       // connect to NEAR
       const near = await connect(
@@ -215,7 +216,7 @@ export default {
       })
       const formData = new FormData()
       formData.append('imagen', this.item.imagen)
-      await this.$axios.$post('https://biterchecker.com:3124/uploader/categoria', formData).then((data) => {
+      await this.$axios.$post('api/uploader/categoria', formData).then((data) => {
         contract.put_category({
           category_id: this.item.id,
           name: this.item.nombre,

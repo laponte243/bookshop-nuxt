@@ -402,6 +402,11 @@ export default {
       ]
     }
   },
+  created () {
+    if (this.$route.query.transactionHashes) {
+      this.$toast.success('Libro creado correctamente')
+    }
+  },
   mounted () {
     this.getCategorias()
   },
@@ -420,7 +425,7 @@ export default {
       const formData = new FormData()
       formData.append('cover', this.cover)
       formData.append('book', this.book)
-      const { data } = await this.$axios.$post('https://biterchecker.com:3124/uploader/web3storage', formData)
+      const { data } = await this.$axios.$post('api/uploader/web3storage', formData)
       return data
     },
     isURL (str) {
@@ -434,7 +439,7 @@ export default {
     },
     async getCategorias () {
       this.categorias = []
-      const CONTRACT_NAME = 'nft.nearbookshop.near'
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
       // connect to NEAR
       const near = await connect(
         CONFIG(new keyStores.BrowserLocalStorageKeyStore())
@@ -452,7 +457,7 @@ export default {
       }
     },
     async create_item () {
-      const CONTRACT_NAME = 'nft.nearbookshop.near'
+      const CONTRACT_NAME = 'book.bookshop2.testnet'
       const direccionIpfs = '.ipfs.dweb.link'
       // connect to NEAR
       const near = await connect(
@@ -471,7 +476,9 @@ export default {
       this.regalias.forEach((element) => {
         relagia[element.wallet] = element.percent * 100
       })
-      await this.$axios.$post('https://biterchecker.com:3124/uploader/web3storage', formData).then((data) => {
+      this.$toast.show('Inicio subida de archivos...')
+      await this.$axios.$post('api/uploader/web3storage', formData).then((data) => {
+        this.$toast.show('Inicio subida a contrato...')
         contract.nft_series(
           {
             token_metadata: {
@@ -489,9 +496,10 @@ export default {
           '300000000000000',
           '1000000000000000000000000'
         ).then((response) => {
-          console.log(response)
+          this.$toast.success('Libro creado correctamente')
         }).catch((error) => {
           console.log(error)
+          this.$toast.error('Ops, algo salio mal')
         })
       })
     }

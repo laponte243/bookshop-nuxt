@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/toast": "^3.3.1",
     "@pinata/sdk": "^1.1.24",
     "body-parser": "^1.19.2",
     "chart.js": "^3.7.1",

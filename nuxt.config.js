@@ -2,7 +2,7 @@ import colors from 'vuetify/es5/util/colors'
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
-  ssr: false,
+  ssr: true,
 
   // Target: https://go.nuxtjs.dev/config-target
   target: 'server',
@@ -49,6 +49,7 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     'nuxt-highcharts',
+    '@nuxtjs/toast',
   ],
   serverMiddleware: [
     '~/api/index.js'
@@ -86,8 +87,21 @@ export default {
       }
     }
   },
+  toast: {
+    position: 'top-right',
+    duration: 3000,
+    register: [ // Register custom toasts
+      {
+        name: 'my-error',
+        message: 'Oops...Something went wrong',
+        options: {
+          type: 'error'
+        }
+      }
+    ]
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    publicPath: 'https://nearbook.store/'
+    publicPath: ''
   }
 }

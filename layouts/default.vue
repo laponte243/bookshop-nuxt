@@ -154,11 +154,12 @@ export default {
   methods: {
     async signIn () {
       // connect to NEAR
+      this.$toast.show('Iniciando sesión...')
       const near = await connect(CONFIG(new keyStores.BrowserLocalStorageKeyStore()))
       // create wallet connection
       const wallet = new WalletConnection(near)
       wallet.requestSignIn(
-        'nft.nearbookshop.near'
+        'book.bookshop2.testnet'
       )
     },
     async isSigned () {
@@ -167,7 +168,7 @@ export default {
       // create wallet connection
       const wallet = new WalletConnection(near)
       if (wallet.isSignedIn()) {
-        const CONTRACT_NAME = 'nft.nearbookshop.near'
+        const CONTRACT_NAME = 'book.bookshop2.testnet'
         const contract = new Contract(wallet.account(), CONTRACT_NAME, {
           viewMethods: ['get_profile'],
           sender: wallet.account()
@@ -176,6 +177,7 @@ export default {
           user_id: wallet.getAccountId()
         }).then((res) => {
           this.profilex = true
+          this.$toast.success('Autentificado de manera exitosa')
         }).catch((err) => {
           console.log(err)
           this.profilex = false
@@ -188,6 +190,7 @@ export default {
     },
     async signOut () {
       // connect to NEAR
+      this.$toast.show('Hasta pronto...')
       const near = await connect(CONFIG(new keyStores.BrowserLocalStorageKeyStore()))
       // create wallet connection
       const wallet = new WalletConnection(near)
